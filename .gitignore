@@ -147,3 +147,9 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Postman local workspace
+.postman/
+
+# macOS files
+.DS_Store
