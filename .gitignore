@@ -153,3 +153,4 @@ vite.config.ts.timestamp-*
 
 # macOS files
 .DS_Store
+postman/globals/
