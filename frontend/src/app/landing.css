@@ -1,0 +1,666 @@
+/* Meme’d original design styles, isolated to the Launchpad route.
+   All visual values originate from the supplied styles(1).css file. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+.memed-landing{--plum:#191628;--lime:#C8F36B;--violet:#A88BFA;--coral:#FFAB95;--cream:#F7F5F0;--surface:#302B40;--ink:#262233;--muted:#aaa5b8;--heading:"Space Grotesk",sans-serif;--body:"Inter",sans-serif;--radius:24px;--ease:cubic-bezier(.22,1,.36,1)}
+.memed-landing *{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:105px}
+.memed-landing{margin:0;background:var(--plum);color:var(--cream);font-family:var(--body);font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.memed-landing button,.memed-landing input{font:inherit}
+.memed-landing button,.memed-landing a,.memed-landing input{-webkit-tap-highlight-color:transparent}
+.memed-landing button{cursor:pointer}
+.memed-landing button{border:0}
+.memed-landing a{color:inherit;text-decoration:none}
+.memed-landing button:focus-visible,.memed-landing a:focus-visible,.memed-landing input:focus-visible{outline:3px solid var(--violet);outline-offset:6px}
+.memed-landing svg{width:24px;height:24px;flex-shrink:0}
+.memed-landing h1,.memed-landing h2,.memed-landing h3,.memed-landing p{margin:0}
+.memed-landing h1,.memed-landing h2,.memed-landing h3{font-family:var(--heading);font-weight:500;line-height:1.08;letter-spacing:-.05em}
+.memed-landing button{color:inherit}
+.memed-landing strong{font-weight:600}
+.memed-landing ::selection{background:var(--lime);color:var(--plum)}
+.memed-landing .symbol-library{position:absolute;width:0;height:0;overflow:hidden}
+.memed-landing .container{width:min(1280px,calc(100% - 112px));margin-inline:auto}
+.memed-landing .cream{background:var(--cream);color:var(--ink)}
+.memed-landing .section-pad{padding:108px 0}
+.memed-landing .eyebrow{font-size:10px;letter-spacing:1.8px;line-height:1.6;font-weight:650}
+.memed-landing .tiny-spark{font-size:17px;vertical-align:-1px;margin-right:8px;color:var(--lime)}
+.memed-landing .lime-text{color:var(--lime)}
+.memed-landing .purple-text{color:#7852c7}
+.memed-landing .serif-accent{font-family:Georgia,serif;font-style:italic;font-weight:400;letter-spacing:-.055em;color:#7951b7}
+.memed-landing .mini-label{font-size:9px;letter-spacing:1.15px;font-weight:600;color:#b7b1c4}
+.memed-landing .skip-link{position:fixed;top:12px;left:12px;z-index:100;background:var(--lime);color:var(--plum);padding:10px 18px;border-radius:12px;transform:translateY(-200%)}
+.memed-landing .skip-link:focus{transform:translateY(0)}
+.memed-landing .navbar{position:fixed;z-index:20;inset:0 0 auto;transition:background .3s,box-shadow .3s}
+.memed-landing .navbar.scrolled{background:#191628ed;backdrop-filter:blur(18px);box-shadow:0 1px 0 #ffffff12}
+.memed-landing .nav-inner{width:min(1280px,calc(100% - 112px));margin:auto;display:flex;height:94px;align-items:center;justify-content:space-between;gap:30px}
+.memed-landing .wordmark{display:inline-flex;align-items:center;gap:9px;font-family:var(--heading);font-size:32px;font-weight:700;line-height:1;letter-spacing:-2px}
+.memed-landing .wordmark>svg{width:32px;height:32px;color:var(--lime)}
+.memed-landing .wordmark-dot{color:var(--lime)}
+.memed-landing .desktop-nav{display:flex;gap:30px}
+.memed-landing .desktop-nav a{font-size:12px;color:#cec8d7;transition:color .2s}
+.memed-landing .desktop-nav a:hover{color:var(--lime)}
+.memed-landing .nav-actions{display:flex;align-items:center;gap:26px}
+.memed-landing .login{padding:8px 0;background:none;font-size:12px}
+.memed-landing .login:hover{color:var(--lime)}
+.memed-landing .button{display:inline-flex;justify-content:space-between;align-items:center;gap:24px;padding:17px 23px;border-radius:12px;font-size:13px;font-weight:600;line-height:1.4;transition:transform .25s var(--ease),background .25s,box-shadow .25s}
+.memed-landing .button svg{width:21px;height:21px;transition:transform .25s var(--ease)}
+.memed-landing .button:hover svg,.memed-landing .text-cta:hover svg{transform:translateX(4px)}
+.memed-landing .button:hover{transform:translateY(-3px)}
+.memed-landing .button:active{transform:translateY(0)}
+.memed-landing .button.lime{background:var(--lime);color:var(--plum)}
+.memed-landing .button.lime:hover{background:#d4ff83;box-shadow:0 7px 30px #c8f36b17}
+.memed-landing .button.outline{border:1px solid #ffffff35;background:#ffffff03;color:var(--cream)}
+.memed-landing .button.outline:hover{background:#ffffff09;border-color:#ffffff70}
+.memed-landing .button.small{padding:12px 18px;border-radius:9px;font-size:12px;gap:18px}
+.memed-landing .menu-toggle,.memed-landing .mobile-nav{display:none}
+.memed-landing .hero{position:relative;padding-top:160px;overflow:hidden;isolation:isolate;background:var(--plum)}
+.memed-landing .hero:after,.memed-landing .final-section:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' opacity='.11' filter='url(%23n)' d='M0 0h160v160H0z'/%3E%3C/svg%3E");opacity:.13}
+.memed-landing .hero-glow{position:absolute;z-index:-2;right:-100px;top:80px;width:850px;height:700px;background:radial-gradient(ellipse,#63448833 0%,transparent 68%);pointer-events:none}
+.memed-landing .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center;min-height:595px}
+.memed-landing .hero-copy{padding-bottom:45px}
+.memed-landing .hero-copy .eyebrow{color:#c5bed0;margin-bottom:28px;font-size:9px;letter-spacing:1.55px}
+.memed-landing .hero h1{font-size:clamp(64px,6.8vw,99px);letter-spacing:-.075em;line-height:1.02}
+.memed-landing .headline-line{display:block;animation:headline-in 1s var(--ease) both}
+.memed-landing .headline-line:nth-child(2){animation-delay:.12s}
+.memed-landing .view-word{color:var(--violet);display:inline-block;position:relative}
+.memed-landing .view-word>svg{width:103%;height:20px;position:absolute;left:-2px;bottom:-13px}
+.memed-landing .hero-description{font-size:15px;line-height:1.85;color:#bcb7c8;max-width:440px;margin-top:38px}
+.memed-landing .hero-ctas{display:flex;gap:12px;margin-top:29px}
+.memed-landing .hero-ctas .button{padding:15px 19px;gap:18px;text-align:left;min-width:205px}
+.memed-landing .hero-ctas strong{display:block;font-size:13px}
+.memed-landing .hero-ctas small{display:block;font-size:10px;font-weight:450;margin-top:3px;opacity:.8}
+.memed-landing .trust-line{display:flex;align-items:center;gap:8px;font-size:9px;color:#a9a3b7;margin-top:24px;letter-spacing:-.1px}
+.memed-landing .trust-line svg{width:15px;height:15px;color:var(--violet)}
+.memed-landing .mobile-break{display:none}
+.memed-landing .hero-reveal{animation:headline-in 1s .2s var(--ease) both}
+.memed-landing .hero-product{position:relative;padding:28px 0 53px;margin-top:0;max-width:560px;min-width:0;animation:product-in 1.25s .25s var(--ease) both}
+.memed-landing .control-caption{display:flex;gap:8px;align-items:center;font-size:8px;font-weight:600;letter-spacing:1.2px;position:absolute;top:0;left:28px;color:#b9adc9}
+.memed-landing .control-caption svg{width:22px;height:22px;transform:rotate(35deg);margin-left:8px;color:var(--violet)}
+.memed-landing .status-dot{width:6px;height:6px;display:inline-block;border-radius:100%;background:var(--lime);flex-shrink:0}
+.memed-landing .campaign-card{border-radius:18px;border:1px solid #65557688;background:linear-gradient(130deg,#342c43,#272137);padding:24px 25px 20px;box-shadow:0 30px 60px #09071465,0 0 0 6px #ffffff02;position:relative;transform:rotate(1.2deg)}
+.memed-landing .campaign-top{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.memed-landing .demo-pill{border:1px solid #ffffff25;color:#c8c1d2;font-size:8px;line-height:1.4;padding:5px 9px;border-radius:20px;white-space:nowrap;letter-spacing:.15px}
+.memed-landing .campaign-title{display:flex;align-items:center;justify-content:space-between;margin:20px 0 18px}
+.memed-landing .campaign-title h2{font-size:26px;letter-spacing:-1.2px}
+.memed-landing .campaign-title p{font-size:10px;color:#aaa0b8;margin-top:5px}
+.memed-landing .platforms{display:flex;gap:9px;padding:8px 10px;border:1px solid #ffffff12;border-radius:10px}
+.memed-landing .platforms svg{width:16px;height:16px;color:#c7bdcf}
+.memed-landing .campaign-media{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center}
+.memed-landing .post-art{overflow:hidden;border-radius:10px;background:var(--lime);transform:rotate(-2deg);border:1px solid #ffffff20;box-shadow:0 6px 20px #19162840}
+.memed-landing .post-art>svg{width:100%;height:auto;display:block}
+.memed-landing .post-bottom{color:var(--plum);display:flex;justify-content:space-between;padding:6px 11px;font-size:7px;border-top:1px solid #19162820;font-weight:500}
+.memed-landing .views-panel{min-width:0}
+.memed-landing .view-number{font-family:var(--heading);font-size:44px;letter-spacing:-2px;line-height:1.2;margin-top:10px;font-weight:500;font-variant-numeric:tabular-nums}
+.memed-landing .view-sub{font-size:10px;color:#b9adc9}
+.memed-landing .momentum-chart{width:100%;height:auto;overflow:visible;margin-top:10px}
+.memed-landing .chart-note{display:block;font-size:7px;color:#a49ab2;margin-top:4px}
+.memed-landing .chart-line{stroke-dasharray:330;stroke-dashoffset:330;animation:draw 1.5s 1s var(--ease) forwards}
+.memed-landing .milestone-heading{display:flex;justify-content:space-between;gap:8px;margin-top:25px;align-items:center}
+.memed-landing .milestone-heading>span:last-child{font-size:7px;color:#aea4bf}
+.memed-landing .hero-ladder{display:grid;grid-template-columns:repeat(3,1fr);margin-top:17px;position:relative;isolation:isolate}
+.memed-landing .hero-ladder:before{content:"";position:absolute;left:14%;right:14%;top:13px;height:1px;background:linear-gradient(to right,var(--lime) 53%,#675c79 53%);z-index:-1}
+.memed-landing .ladder-item{display:flex;flex-direction:column;align-items:center;font-size:9px;color:#bcb3c9;position:relative;animation:headline-in .65s var(--ease) both;animation-delay:.6s}
+.memed-landing .ladder-item:nth-child(2){animation-delay:.8s}
+.memed-landing .ladder-item:nth-child(3){animation-delay:1s}
+.memed-landing .milestone-node{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#3d344e;border:1px solid #756787;color:#aaa0bc;font-size:9px;margin-bottom:9px}
+.memed-landing .milestone-node.done{background:var(--lime);color:var(--plum);border-color:var(--lime)}
+.memed-landing .milestone-node svg{width:14px;height:14px}
+.memed-landing .ladder-item strong{font-family:var(--heading);font-size:16px;letter-spacing:-.5px;color:var(--cream);line-height:1.3;margin-top:2px}
+.memed-landing .ladder-item.reached strong{color:var(--lime)}
+.memed-landing .ladder-item small{color:var(--lime);font-size:6px;letter-spacing:1px;position:absolute;bottom:-16px}
+.memed-landing .next-progress{margin-top:31px}
+.memed-landing .next-progress>div:first-child{display:flex;justify-content:space-between;font-size:8px;color:#a99eb8;margin-bottom:8px}
+.memed-landing .next-progress strong{font-weight:500;color:#c6bbd4}
+.memed-landing .progress-track{height:5px;border-radius:5px;background:#ffffff13;overflow:hidden}
+.memed-landing .progress-track>span{height:100%;width:var(--progress);display:block;background:var(--lime);border-radius:inherit;animation:progress-in 1.8s .4s var(--ease) both;transform-origin:left}
+.memed-landing .hero-budget{display:flex;justify-content:space-between;margin-top:17px;padding-top:15px;border-top:1px solid #ffffff10}
+.memed-landing .hero-budget span{display:flex;flex-direction:column}
+.memed-landing .hero-budget small{font-size:7px;color:#a79ab8}
+.memed-landing .hero-budget strong{font-size:12px;margin-top:3px;font-family:var(--heading);font-weight:500}
+.memed-landing .earned-float{position:absolute;bottom:28px;left:-24px;right:55px;display:flex;align-items:center;gap:12px;z-index:2;border-radius:13px;background:var(--cream);color:var(--plum);box-shadow:0 20px 35px #100b2940;padding:17px 20px;transform:rotate(-2deg);animation:gentle-float 7s 2s ease-in-out infinite}
+.memed-landing .earned-icon{width:40px;height:40px;border-radius:50%;background:var(--lime);display:grid;place-items:center}
+.memed-landing .earned-icon svg{width:25px;height:25px}
+.memed-landing .earned-float small{display:block;font-size:9px;color:#767080}
+.memed-landing .earned-float strong{font-size:23px;font-family:var(--heading);letter-spacing:-1px;display:flex;align-items:center;gap:14px}
+.memed-landing .earned-float strong span{font-family:var(--body);font-size:8px;letter-spacing:0;font-weight:450;padding:4px 7px;border-radius:6px;background:#e9eddf;color:#4e6636}
+.memed-landing .earned-check{margin-left:auto;width:23px;height:23px;color:#61803f}
+.memed-landing .hero-footnote{position:absolute;bottom:-2px;right:8px;font-size:8px;color:#978ca9}
+.memed-landing .hero-bottom{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #ffffff12;padding:27px 0 31px;margin-top:55px;gap:16px;font-size:8px;letter-spacing:1.1px;color:#8f879f}
+.memed-landing .hero-bottom>a{font-size:10px;color:#bcb4c9;letter-spacing:0}
+.memed-landing .hero-bottom>a span{display:inline-block;color:var(--lime);margin-left:20px;font-size:18px}
+.memed-landing .hero-index{font-family:monospace;letter-spacing:.8px}
+.memed-landing .section-heading{position:relative}
+.memed-landing .section-heading>.eyebrow,.memed-landing .how-heading .eyebrow,.memed-landing .why-heading .eyebrow{color:#77707e;margin-bottom:20px}
+.memed-landing .section-heading h2,.memed-landing .how-heading h2,.memed-landing .why-heading h2{font-size:53px;letter-spacing:-2.7px}
+.memed-landing .section-heading>p:last-child{position:absolute;right:10px;bottom:9px;color:#6b6372;font-size:13px;line-height:1.8}
+.memed-landing .audience-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:49px}
+.memed-landing .audience-card{padding:34px 35px 29px;border-radius:22px;scroll-margin-top:120px;overflow:hidden;transition:transform .3s var(--ease)}
+.memed-landing .audience-card:hover{transform:translateY(-5px)}
+.memed-landing .brand-card{background:#ecebe6;border:1px solid #e0ded6}
+.memed-landing .creator-card{background:#e9e1f3;border:1px solid #e1d5ee}
+.memed-landing .card-kicker{display:flex;justify-content:space-between;align-items:center;font-size:9px;font-weight:600;letter-spacing:1px;margin-bottom:26px}
+.memed-landing .card-kicker>span:last-child{font-family:monospace;color:#8e8598}
+.memed-landing .mini-spark{font-size:20px;margin-right:5px;vertical-align:-2px}
+.memed-landing .audience-card h3{font-size:35px;letter-spacing:-1.7px;line-height:1.17}
+.memed-landing .audience-card>p{font-size:12px;line-height:1.8;color:#6e6475;max-width:410px;margin-top:18px}
+.memed-landing .mini-dashboard{margin:30px 0 26px;background:#fff;border-radius:13px;padding:17px 20px 14px;box-shadow:0 10px 24px #302b4009;transform:rotate(-1.5deg);border:1px solid #302b4008}
+.memed-landing .dashboard-title{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:9px;font-weight:500}
+.memed-landing .dashboard-title>span:first-child{display:flex;align-items:center;gap:7px}
+.memed-landing .dashboard-logo{font-family:var(--heading);font-size:16px;letter-spacing:-1px;color:#332c41;font-weight:700}
+.memed-landing .tag{border-radius:5px;padding:3px 7px;font-size:7px;font-weight:500;white-space:nowrap}
+.memed-landing .tag.green{color:#5a703d;background:#f0f5e8}
+.memed-landing .tag.purple{color:#705099;background:#ede5f7}
+.memed-landing .mini-budget{display:flex;justify-content:space-between;margin:19px 0 16px;gap:12px}
+.memed-landing .mini-budget>span{display:flex;flex-direction:column}
+.memed-landing .mini-budget small{font-size:8px;color:#91899c}
+.memed-landing .mini-budget strong{font-family:var(--heading);font-size:25px;letter-spacing:-.9px;margin-top:3px;display:flex;gap:13px;align-items:center;line-height:1.3}
+.memed-landing .mini-budget strong>svg{color:#86a351;width:20px;height:20px}
+.memed-landing .mini-dashboard .progress-track{background:#eef0e8}
+.memed-landing .mini-dashboard .progress-track>span{background:#a8cc60}
+.memed-landing .dashboard-bottom{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:7px;color:#706279;margin-top:12px}
+.memed-landing .dashboard-bottom>span:first-child{display:flex;align-items:center;gap:5px}
+.memed-landing .dot{width:5px;height:5px;background:#b2d576;border-radius:50%}
+.memed-landing .text-cta{background:none;padding:0;display:flex;justify-content:space-between;align-items:center;width:100%;font-size:12px;font-weight:600}
+.memed-landing .text-cta svg{width:21px;height:21px;transition:transform .25s}
+.memed-landing .creator-mini{background:#302b40;color:var(--cream);transform:rotate(1.5deg);border:1px solid #ffffff10}
+.memed-landing .creator-mini .dashboard-logo{color:var(--lime)}
+.memed-landing .creator-mini .mini-budget{margin-bottom:12px}
+.memed-landing .creator-mini .mini-budget small{color:#aaa1b8}
+.memed-landing .earned-mini{font-family:var(--body);font-size:12px;letter-spacing:0;font-weight:450;color:var(--lime);background:#c8f36b18;padding:0 6px;border-radius:5px}
+.memed-landing .mini-budget>.mini-bars{display:flex;flex-direction:row;align-items:flex-end;gap:7px;height:49px;padding-top:8px}
+.memed-landing .mini-bars i{width:14px;background:#a88bfa;border-radius:3px 3px 0 0;height:30%}
+.memed-landing .mini-bars i:nth-child(2){height:45%}
+.memed-landing .mini-bars i:nth-child(3){height:35%}
+.memed-landing .mini-bars i:nth-child(4){height:60%}
+.memed-landing .mini-bars i:nth-child(5){height:48%}
+.memed-landing .mini-bars i:nth-child(6){height:78%}
+.memed-landing .mini-bars i:nth-child(7){height:100%;background:var(--lime)}
+.memed-landing .creator-mini .dashboard-bottom{border-top:1px solid #ffffff12;padding-top:12px;color:#bcb1c9}
+.memed-landing .dashboard-bottom svg{width:10px;height:10px;color:var(--lime)}
+.memed-landing .how-section{padding-top:0}
+.memed-landing .how-heading,.memed-landing .why-heading{display:flex;justify-content:space-between;gap:30px;align-items:flex-end}
+.memed-landing .how-heading>p,.memed-landing .why-heading>p{font-size:13px;color:#6b6372;line-height:1.8;padding-bottom:7px}
+.memed-landing .how-heading h2{font-size:52px}
+.memed-landing .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:50px}
+.memed-landing .step-number{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #d8d3db;padding-top:16px;margin-bottom:28px;position:relative}
+.memed-landing .step-number:before{content:"";position:absolute;left:0;top:-4px;width:7px;height:7px;border-radius:50%;background:#a491ba}
+.memed-landing .step-number>span{font-family:var(--heading);font-size:17px;color:#92879e}
+.memed-landing .step-number>svg{width:18px;height:18px;color:#a491ba}
+.memed-landing .step-visual{height:137px;border:1px solid #dedadf;border-radius:12px;padding:20px;display:flex;flex-direction:column;justify-content:center;background:#f0ede9}
+.memed-landing .interface-label{font-size:7px;letter-spacing:1px;color:#81738f;font-weight:600}
+.memed-landing .opportunity-visual>strong{font-family:var(--heading);font-size:19px;letter-spacing:-.6px;margin:8px 0 10px}
+.memed-landing .opportunity-visual>div{display:flex;gap:20px}
+.memed-landing .opportunity-visual>div span{font-size:7px;color:#81778b}
+.memed-landing .opportunity-visual b{font-weight:500;color:var(--ink);display:block;font-size:10px}
+.memed-landing .submission-visual{background:#eae4f2}
+.memed-landing .link-input{display:flex;align-items:center;gap:9px;background:#f8f6fb;padding:11px 9px;border-radius:7px;margin-top:12px;font-size:8px}
+.memed-landing .link-input svg{width:14px;height:14px}
+.memed-landing .link-input svg:last-child{margin-left:auto;color:#66853f}
+.memed-landing .visual-note{font-size:7px;color:#75627f;margin-top:10px}
+.memed-landing .reward-visual{background:#eaf0df}
+.memed-landing .reward-visual>strong{display:flex;gap:10px;align-items:center;font-family:var(--heading);font-size:21px;letter-spacing:-1px;margin-top:11px}
+.memed-landing .reward-visual svg{width:23px;height:23px}
+.memed-landing .step h3{font-size:25px;line-height:1.15;letter-spacing:-1px;margin-top:24px;min-height:58px}
+.memed-landing .step>p{font-size:12px;line-height:1.85;color:#6e6475;margin-top:16px;max-width:320px}
+.memed-landing .payout-section{background:#201b30;padding:112px 0 117px;position:relative}
+.memed-landing .payout-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:100px;align-items:center}
+.memed-landing .payout-copy .eyebrow{color:#b4a3c8;font-size:9px;letter-spacing:1.6px;margin-bottom:25px}
+.memed-landing .payout-copy h2{font-size:56px;letter-spacing:-3px}
+.memed-landing .payout-copy h2 .purple-text{color:var(--violet)}
+.memed-landing .payout-copy>p:not(.eyebrow){font-size:13px;color:#b6a9c7;max-width:360px;line-height:1.9;margin-top:25px}
+.memed-landing .payout-rule{display:flex;gap:16px;margin-top:28px}
+.memed-landing .payout-rule>span{font-family:var(--heading);font-size:10px;border:1px solid #ffffff25;width:27px;height:27px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;color:#c5b5db;margin-top:3px}
+.memed-landing .payout-rule p{font-size:11px;color:#a497b8;line-height:1.9}
+.memed-landing .payout-rule strong{color:#ded3ea;font-size:12px}
+.memed-landing .try-label{display:flex;align-items:center;gap:15px;color:var(--violet);font-size:14px;font-family:Georgia,serif;font-style:italic;margin-top:24px}
+.memed-landing .try-label svg{width:80px;height:36px}
+.memed-landing .calculator{background:#f7f5f0;color:var(--ink);border-radius:20px;padding:28px 30px;box-shadow:0 30px 75px #0f0a2630;border:1px solid #e2dbe9;min-width:0}
+.memed-landing .calculator-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.memed-landing .calculator-top .mini-label{color:#8b809b;font-size:8px}
+.memed-landing .calculator .demo-pill{color:#82718f;border-color:#d4cbdd;font-size:7px}
+.memed-landing .calculator-values{display:flex;justify-content:space-between;gap:15px;margin-top:32px;margin-bottom:21px}
+.memed-landing .calculator-values>div{display:flex;flex-direction:column}
+.memed-landing .calculator-values>div:last-child{text-align:right}
+.memed-landing .calculator-values label,.memed-landing .calculator-values span{font-size:10px;color:#706279;margin-bottom:6px}
+.memed-landing .calculator-values output{font-family:var(--heading);font-size:43px;line-height:1.2;letter-spacing:-2px;font-variant-numeric:tabular-nums}
+.memed-landing .calculator-values>div:last-child output{color:#7552aa}
+.memed-landing .calculator input[type=range]{-webkit-appearance:none;appearance:none;display:block;width:100%;height:7px;border-radius:10px;background:linear-gradient(to right,#9272c8 var(--fill),#e4ddec var(--fill));margin:18px 0;cursor:ew-resize}
+.memed-landing .calculator input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;background:var(--plum);border:5px solid var(--lime);border-radius:50%;box-shadow:0 0 0 4px #9272c821;transition:box-shadow .2s}
+.memed-landing .calculator input[type=range]:hover::-webkit-slider-thumb{box-shadow:0 0 0 7px #9272c821}
+.memed-landing .calculator input[type=range]::-moz-range-thumb{width:16px;height:16px;background:var(--plum);border:5px solid var(--lime);border-radius:50%}
+.memed-landing .range-labels{display:flex;justify-content:space-between;color:#74677f;font-size:8px;margin-top:15px}
+.memed-landing .calculator-ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px}
+.memed-landing .calculator-ladder button{border:1px solid #dfd8e7;background:#f0ecf4;border-radius:10px;display:flex;flex-direction:column;align-items:center;padding:13px 4px 11px;position:relative;transition:background .25s,border-color .25s,transform .25s}
+.memed-landing .calculator-ladder button:hover{transform:translateY(-3px);border-color:#b298d4}
+.memed-landing .calculator-ladder button.selected{background:var(--plum);color:var(--cream);border-color:var(--plum)}
+.memed-landing .calc-node{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#e1d8ed;color:#9885b0;font-size:8px;margin-bottom:8px}
+.memed-landing .calculator-ladder button.crossed .calc-node{background:#dbeac3;color:#52713b}
+.memed-landing .calculator-ladder button.selected .calc-node{background:var(--lime);color:var(--plum)}
+.memed-landing .calculator-ladder strong{font-family:var(--heading);font-size:22px;letter-spacing:-1px;font-weight:500}
+.memed-landing .calculator-ladder small{font-size:10px;margin-top:3px;color:#8b7d9d}
+.memed-landing .calculator-ladder button.selected small{color:var(--lime)}
+.memed-landing .calc-state{font-size:6px;margin-top:9px;color:#a396b3;height:11px;letter-spacing:.2px}
+.memed-landing .calculator-ladder button.selected .calc-state{color:#cebfdf}
+.memed-landing .next-reward{font-size:9px;background:#eee8f5;border-radius:8px;padding:11px 12px;display:flex;align-items:center;gap:7px;color:#7a619a;margin-top:16px;min-height:38px}
+.memed-landing .next-reward .status-dot{background:#a88bfa;width:5px;height:5px}
+.memed-landing .example-budget{margin-top:24px;padding-top:21px;border-top:1px solid #e3dce9}
+.memed-landing .budget-label{display:flex;justify-content:space-between;gap:8px;font-size:9px;align-items:center}
+.memed-landing .budget-label strong{font-weight:550}
+.memed-landing .budget-label>span{font-size:8px;color:#8b7e98}
+.memed-landing .budget-meter{display:flex;background:#e9e4ef;height:10px;border-radius:10px;overflow:hidden;margin:15px 0 12px}
+.memed-landing .budget-spent{width:25%;background:#a88bfa}
+.memed-landing .budget-meter #budget-payout{background:#a6c663;transition:width .2s}
+.memed-landing .budget-legend{display:flex;justify-content:space-between;gap:8px;font-size:7px;color:#706279}
+.memed-landing .budget-legend>span{display:flex;align-items:center;gap:5px}
+.memed-landing .budget-legend i{height:5px;width:5px;border-radius:50%}
+.memed-landing .spent-key{background:var(--violet)}
+.memed-landing .reward-key{background:#a6c663}
+.memed-landing .budget-legend strong{font-weight:500;color:#63576e}
+.memed-landing .remaining-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:17px;font-size:9px;color:#706279}
+.memed-landing .remaining-row strong{color:var(--ink);font-family:var(--heading);font-size:18px;letter-spacing:-.5px}
+.memed-landing .demo-explanation{margin-top:18px;color:#796884;font-size:7px;line-height:1.7;max-width:375px}
+.memed-landing .why-heading h2{font-size:49px}
+.memed-landing .bento-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:22px;margin-top:48px}
+.memed-landing .bento{border:1px solid #e1dce4;border-radius:18px;padding:26px 30px 30px;min-height:276px;position:relative;overflow:hidden}
+.memed-landing .bento-top{display:flex;justify-content:space-between;align-items:center;color:#a299ab;font-family:monospace;font-size:9px}
+.memed-landing .feature-icon{display:grid;place-items:center;width:35px;height:35px;border-radius:10px;background:#ebe5f3;color:#775899}
+.memed-landing .feature-icon svg{width:19px;height:19px}
+.memed-landing .bento h3{font-size:26px;letter-spacing:-1px;margin-top:26px}
+.memed-landing .bento p{font-size:11px;line-height:1.85;color:#6e6475;margin-top:11px}
+.memed-landing .bento-milestones{background:#eeebf2}
+.memed-landing .bento-budget{background:#eeeede}
+.memed-landing .bento-creators{background:#eeeae4}
+.memed-landing .bento-safeguards{background:#ebe4f2}
+.memed-landing .bento-ladder{display:flex;gap:10px;margin-top:20px}
+.memed-landing .bento-ladder>span{border:1px solid #d9d2e1;border-radius:8px;background:#f7f5f980;padding:10px 16px;width:110px;font-family:var(--heading);font-size:15px;line-height:1.4;position:relative}
+.memed-landing .bento-ladder small{display:block;font-size:9px;color:#73627f;font-family:var(--body)}
+.memed-landing .bento-ladder>span:nth-child(2){background:var(--plum);color:var(--cream);border-color:var(--plum)}
+.memed-landing .bento-ladder>span:nth-child(2) small{color:var(--lime)}
+.memed-landing .bento-ladder b{position:absolute;right:12px;top:11px;color:var(--lime);font-size:10px}
+.memed-landing .bento-budget .feature-icon{background:#e3e8cb;color:#737f48}
+.memed-landing .budget-ring{position:absolute;right:30px;top:35px;width:125px;height:125px;border-radius:50%;background:conic-gradient(#a5c45e 0% 75%,#dee2cd 75%);transform:rotate(135deg)}
+.memed-landing .budget-ring:before{content:"";position:absolute;inset:10px;border-radius:50%;background:#eeeede}
+.memed-landing .budget-ring>span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;transform:rotate(-135deg);font-family:var(--heading);font-size:29px;letter-spacing:-1px}
+.memed-landing .budget-ring small{font-family:var(--body);font-size:8px;color:#909776;letter-spacing:0}
+.memed-landing .bento-budget h3{margin-top:105px}
+.memed-landing .submission-status{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#f8f6f2;border:1px solid #e3dce4;border-radius:9px;padding:11px 13px;margin-top:22px;max-width:360px;font-size:9px}
+.memed-landing .submission-status>span:first-child{display:flex;align-items:center;gap:9px}
+.memed-landing .avatar{width:25px;height:25px;display:grid;place-items:center;background:var(--coral);border-radius:50%;font-size:15px}
+.memed-landing .safeguard-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:23px}
+.memed-landing .safeguard-chips>span{display:flex;align-items:center;gap:5px;padding:9px 11px;background:#f4eef8;border-radius:7px;border:1px solid #e0d4eb;font-size:8px}
+.memed-landing .safeguard-chips svg{color:#886da5;width:12px;height:12px}
+.memed-landing .bento-creators,.memed-landing .bento-safeguards{min-height:255px}
+.memed-landing .final-section{padding:100px 0 110px;position:relative;overflow:hidden;text-align:center;isolation:isolate}
+.memed-landing .final-glow{position:absolute;z-index:-2;inset:0;background:radial-gradient(ellipse at 50% 125%,#a88bfa20,transparent 65%)}
+.memed-landing .final-content .eyebrow{color:#a79bb9;font-size:9px;letter-spacing:1.7px;margin-bottom:28px}
+.memed-landing .final-content h2{font-size:58px;letter-spacing:-2.7px;line-height:1.16}
+.memed-landing .final-content h2 span{color:var(--lime)}
+.memed-landing .final-content>p:not(.eyebrow){color:#aaa0bc;font-size:13px;margin-top:24px}
+.memed-landing .final-ctas{display:flex;justify-content:center;gap:14px;margin-top:32px}
+.memed-landing .final-ctas .button{font-size:12px;padding:16px 23px;gap:26px}
+.memed-landing .final-watermark{position:absolute;width:380px;height:380px;right:-125px;top:65px;color:#a88bfa09;transform:rotate(-15deg);z-index:-1}
+.memed-landing footer{border-top:1px solid #ffffff10;background:var(--plum)}
+.memed-landing .footer-main{display:flex;justify-content:space-between;align-items:center;gap:50px;padding:46px 0 40px}
+.memed-landing .footer-main .wordmark{font-size:28px}
+.memed-landing .footer-main .wordmark>svg{width:26px;height:26px}
+.memed-landing .footer-main p{font-size:10px;color:#958aa6;line-height:1.85;margin-top:16px}
+.memed-landing .footer-main nav{display:flex;gap:25px;align-items:center;font-size:10px;color:#b6acc5}
+.memed-landing .footer-main nav button{padding:0;background:none;font-size:10px}
+.memed-landing .footer-main nav a:hover,.memed-landing .footer-main nav button:hover{color:var(--lime)}
+.memed-landing .github-button{display:flex;align-items:center;gap:11px;font-size:10px;background:none;padding:11px 0;color:#c1b6d1;text-align:left}
+.memed-landing .github-button>svg{width:18px;height:18px}
+.memed-landing .github-button small{display:block;font-size:7px;color:#786d8c;line-height:1.3}
+.memed-landing .github-button>span:last-child{margin-left:10px}
+.memed-landing .footer-bottom{border-top:1px solid #ffffff0c;padding:22px 0 26px;display:flex;justify-content:space-between;gap:15px;font-size:8px;color:#736981}
+.memed-landing .footer-bottom>span:last-child{letter-spacing:1px;font-size:7px;display:flex;align-items:center;gap:10px}
+.memed-landing .footer-bottom i{width:4px;height:4px;background:var(--violet);border-radius:50%}
+.memed-landing dialog{width:min(520px,calc(100% - 36px));background:var(--cream);color:var(--ink);border:1px solid #e2d4ee;border-radius:24px;padding:38px;box-shadow:0 30px 100px #0006;animation:dialog-in .3s var(--ease);max-height:85dvh;overflow-y:auto}
+.memed-landing dialog::backdrop{background:#100b21b8;backdrop-filter:blur(7px)}
+.memed-landing .dialog-close{position:absolute;top:15px;right:15px;font-size:25px;line-height:1;width:32px;height:32px;border-radius:50%;background:#eae3f0;color:#7a678e}
+.memed-landing .dialog-spark{width:47px;height:47px;background:var(--lime);border-radius:14px;display:grid;place-items:center;margin-bottom:24px}
+.memed-landing .dialog-spark svg{width:29px;height:29px}
+.memed-landing .dialog-spark+.eyebrow{color:#9b86ae;font-size:8px;margin-bottom:10px}
+.memed-landing dialog h2{font-size:35px;letter-spacing:-1.7px}
+.memed-landing #dialog-description{font-size:12px;color:#8b7c96;line-height:1.8;margin-top:14px}
+.memed-landing #dialog-content{margin-top:23px;display:flex;flex-direction:column;gap:10px}
+.memed-landing #dialog-content .button{font-size:12px;background:var(--plum);color:var(--cream)}
+.memed-landing #dialog-content .button.lime{background:var(--lime);color:var(--plum)}
+.memed-landing .dialog-features{list-style:none;margin:0 0 14px;padding:0}
+.memed-landing .dialog-features li{font-size:11px;margin:8px 0;display:flex;align-items:center;gap:9px;color:#71627e}
+.memed-landing .dialog-features svg{width:14px;height:14px;color:#8b6bb5}
+.memed-landing .dialog-note{border-top:1px solid #e1d7e9;margin-top:24px;padding-top:15px;font-size:8px;color:#a194ab}
+.memed-landing .reveal{opacity:1;transform:none}
+.memed-landing .js-motion .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.memed-landing .js-motion .reveal.is-visible{opacity:1;transform:none}
+.memed-landing .audience-card:nth-child(2),.memed-landing .step:nth-child(2),.memed-landing .bento:nth-child(2n){transition-delay:.1s}
+.memed-landing .step:nth-child(3){transition-delay:.2s}
+@keyframes headline-in{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+@keyframes product-in{from{opacity:0;transform:translateY(28px) rotate(2deg)}to{opacity:1;transform:translateY(0) rotate(0)}}
+@keyframes progress-in{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes gentle-float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-5px) rotate(-1deg)}}
+@keyframes dialog-in{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+@media(min-width:1600px){.memed-landing .hero{padding-top:185px}
+.memed-landing .hero-grid{gap:90px}
+.memed-landing .hero h1{font-size:104px}
+.memed-landing .hero-bottom{margin-top:75px}}
+@media(max-width:1199px){.memed-landing .container,.memed-landing .nav-inner{width:calc(100% - 72px)}
+.memed-landing .desktop-nav{gap:20px}
+.memed-landing .nav-actions{gap:20px}
+.memed-landing .hero-grid{gap:32px}
+.memed-landing .hero-ctas .button{min-width:0;flex:1;padding:14px;gap:10px}
+.memed-landing .hero-description{font-size:14px}
+.memed-landing .campaign-card{padding:20px}
+.memed-landing .campaign-media{gap:16px}
+.memed-landing .view-number{font-size:36px}
+.memed-landing .earned-float{left:-12px;right:20px}
+.memed-landing .earned-float strong{font-size:21px}
+.memed-landing .payout-grid{gap:55px}
+.memed-landing .audience-card{padding:30px}
+.memed-landing .audience-card h3{font-size:31px}
+.memed-landing .section-heading h2{font-size:48px}
+.memed-landing .section-heading>p:last-child{font-size:11px}
+.memed-landing .steps{gap:27px}
+.memed-landing .step-visual{padding:16px}
+.memed-landing .reward-visual>strong{font-size:18px}
+.memed-landing .footer-main{gap:30px}
+.memed-landing .footer-main nav{gap:18px}}
+@media(max-width:980px){.memed-landing .desktop-nav{gap:16px}
+.memed-landing .desktop-nav a{font-size:10px}
+.memed-landing .nav-inner{gap:20px}
+.memed-landing .nav-actions{gap:17px}
+.memed-landing .nav-actions .button.small{padding:10px 13px;gap:10px;font-size:10px}
+.memed-landing .wordmark{font-size:28px}
+.memed-landing .wordmark>svg{width:26px;height:26px}
+.memed-landing .hero{padding-top:140px}
+.memed-landing .hero-grid{gap:25px}
+.memed-landing .hero h1{font-size:61px}
+.memed-landing .hero-copy .eyebrow{font-size:7px;letter-spacing:1.3px}
+.memed-landing .hero-description{font-size:12px;margin-top:30px}
+.memed-landing .hero-ctas{flex-direction:column;max-width:280px}
+.memed-landing .hero-ctas .button{padding:12px 15px}
+.memed-landing .hero-ctas small{display:inline;margin-left:8px;font-size:8px}
+.memed-landing .hero-ctas strong{display:inline;font-size:11px}
+.memed-landing .hero-ctas svg{width:16px;height:16px}
+.memed-landing .trust-line{font-size:7px;gap:5px}
+.memed-landing .campaign-card{padding:18px}
+.memed-landing .campaign-top .mini-label{font-size:7px}
+.memed-landing .demo-pill{font-size:6px;padding:4px 6px}
+.memed-landing .campaign-title h2{font-size:22px}
+.memed-landing .campaign-title p{font-size:8px}
+.memed-landing .platforms svg{width:13px;height:13px}
+.memed-landing .view-number{font-size:32px}
+.memed-landing .views-panel .mini-label{font-size:7px}
+.memed-landing .view-sub{font-size:8px}
+.memed-landing .chart-note{font-size:6px}
+.memed-landing .post-bottom{font-size:5px;padding:5px 8px}
+.memed-landing .hero-ladder{margin-top:14px}
+.memed-landing .ladder-item strong{font-size:14px}
+.memed-landing .ladder-item{font-size:7px}
+.memed-landing .milestone-heading .mini-label{font-size:7px}
+.memed-landing .milestone-heading>span:last-child{font-size:6px}
+.memed-landing .earned-float{padding:13px;gap:9px}
+.memed-landing .earned-float small{font-size:8px}
+.memed-landing .earned-float strong{font-size:19px;gap:8px}
+.memed-landing .earned-float strong span{font-size:6px}
+.memed-landing .earned-icon{width:33px;height:33px}
+.memed-landing .control-caption{font-size:6px;letter-spacing:1px;left:12px}
+.memed-landing .hero-budget strong{font-size:11px}
+.memed-landing .hero-bottom{margin-top:30px}
+.memed-landing .hero-index{display:none}
+.memed-landing .section-pad{padding:85px 0}
+.memed-landing .section-heading h2,.memed-landing .how-heading h2{font-size:43px}
+.memed-landing .section-heading>p:last-child{position:static;margin-top:20px}
+.memed-landing .section-heading>p:last-child br{display:none}
+.memed-landing .audience-grid{gap:18px;margin-top:32px}
+.memed-landing .audience-card{padding:27px 25px}
+.memed-landing .audience-card h3{font-size:28px}
+.memed-landing .audience-card>p{font-size:11px}
+.memed-landing .mini-dashboard{padding:15px}
+.memed-landing .mini-budget strong{font-size:20px}
+.memed-landing .mini-budget>.mini-bars{gap:5px}
+.memed-landing .mini-bars i{width:10px}
+.memed-landing .dashboard-bottom{font-size:6px}
+.memed-landing .how-section{padding-top:0}
+.memed-landing .steps{gap:20px}
+.memed-landing .step h3{font-size:22px}
+.memed-landing .step>p{font-size:11px}
+.memed-landing .step-visual{padding:13px;height:130px}
+.memed-landing .opportunity-visual>strong{font-size:16px}
+.memed-landing .opportunity-visual>div{gap:10px}
+.memed-landing .link-input{font-size:6px;gap:5px;padding:10px 7px}
+.memed-landing .reward-visual>strong{font-size:15px;gap:5px}
+.memed-landing .reward-visual svg{width:18px;height:18px}
+.memed-landing .visual-note{font-size:6px}
+.memed-landing .payout-grid{gap:35px;grid-template-columns:.85fr 1.15fr}
+.memed-landing .payout-copy h2{font-size:43px;letter-spacing:-2px}
+.memed-landing .payout-copy .eyebrow{font-size:7px}
+.memed-landing .payout-copy>p:not(.eyebrow){font-size:11px}
+.memed-landing .payout-rule{gap:12px;margin-top:23px}
+.memed-landing .payout-rule strong{font-size:10px}
+.memed-landing .payout-rule p{font-size:9px}
+.memed-landing .calculator{padding:23px}
+.memed-landing .calculator-values output{font-size:35px}
+.memed-landing .calculator-top .mini-label{font-size:6px}
+.memed-landing .calculator-ladder{gap:8px}
+.memed-landing .budget-legend{font-size:6px}
+.memed-landing .why-heading h2{font-size:43px}
+.memed-landing .bento{padding:23px}
+.memed-landing .budget-ring{right:20px;width:105px;height:105px}
+.memed-landing .bento h3{font-size:24px}
+.memed-landing .bento-ladder>span{padding:10px 12px;font-size:13px}
+.memed-landing .bento-ladder b{right:6px}
+.memed-landing .bento p{font-size:10px}
+.memed-landing .bento-safeguards .safeguard-chips{gap:5px}
+.memed-landing .safeguard-chips>span{padding:8px;font-size:7px}
+.memed-landing .final-content h2{font-size:48px}
+.memed-landing .footer-main{flex-wrap:wrap;gap:25px}
+.memed-landing .footer-main nav{font-size:9px}
+.memed-landing .footer-main nav button{font-size:9px}
+.memed-landing .github-button{font-size:9px}}
+@media(max-width:760px){.memed-landing .container,.memed-landing .nav-inner{width:calc(100% - 40px)}
+.memed-landing .nav-inner{height:76px}
+.memed-landing .wordmark{font-size:29px}
+.memed-landing .wordmark>svg{width:28px;height:28px}
+.memed-landing .desktop-nav,.memed-landing .nav-actions{display:none}
+.memed-landing .menu-toggle{display:flex;flex-direction:column;justify-content:center;gap:6px;width:40px;height:40px;border:1px solid #ffffff24;border-radius:9px;padding:10px;background:#ffffff04}
+.memed-landing .menu-toggle span{height:1.5px;background:#ddd2ea;display:block;width:18px;transition:transform .25s}
+.memed-landing .menu-toggle[aria-expanded=true] span:first-child{transform:translateY(3.75px) rotate(45deg)}
+.memed-landing .menu-toggle[aria-expanded=true] span:last-child{transform:translateY(-3.75px) rotate(-45deg)}
+.memed-landing .mobile-nav{display:flex;flex-direction:column;gap:0;background:#211b31;max-height:0;visibility:hidden;overflow:hidden;opacity:0;transition:max-height .35s var(--ease),opacity .25s,visibility .35s;padding-inline:20px}
+.memed-landing .mobile-nav.open{max-height:470px;opacity:1;visibility:visible;padding-bottom:20px;border-bottom:1px solid #ffffff12}
+.memed-landing .mobile-nav a,.memed-landing .mobile-nav>button:not(.button){text-align:left;background:none;font-size:16px;padding:15px 3px;border-bottom:1px solid #ffffff10;display:flex;justify-content:space-between}
+.memed-landing .mobile-nav .button{margin-top:16px;border-radius:8px;padding:14px 16px}
+.memed-landing .navbar.menu-open{background:#191628}
+.memed-landing .hero{padding-top:117px}
+.memed-landing .hero-grid{grid-template-columns:1fr;gap:27px;min-height:auto}
+.memed-landing .hero-copy{padding-bottom:0}
+.memed-landing .hero-copy .eyebrow{font-size:8px;letter-spacing:1.3px;margin-bottom:23px}
+.memed-landing .tiny-spark{font-size:14px;margin-right:6px}
+.memed-landing .hero h1{font-size:clamp(61px,13.8vw,92px);line-height:1.05;letter-spacing:-.075em}
+.memed-landing .view-word>svg{bottom:-10px;height:17px}
+.memed-landing .hero-description{font-size:13px;max-width:440px;margin-top:29px;line-height:1.85}
+.memed-landing .hero-ctas{flex-direction:row;gap:10px;max-width:440px;margin-top:25px}
+.memed-landing .hero-ctas .button{padding:14px 13px;gap:8px;min-height:66px;border-radius:10px}
+.memed-landing .hero-ctas strong{display:block;font-size:11px}
+.memed-landing .hero-ctas small{display:block;font-size:8px;margin:4px 0 0}
+.memed-landing .hero-ctas svg{width:17px;height:17px}
+.memed-landing .trust-line{font-size:7px;line-height:1.7;margin-top:20px}
+.memed-landing .trust-line svg{width:14px;height:14px}
+.memed-landing .hero-product{max-width:500px;width:100%;margin:9px auto 0;padding-top:29px;padding-bottom:59px}
+.memed-landing .campaign-card{padding:20px;border-radius:16px;transform:rotate(.8deg);margin:0 6px}
+.memed-landing .control-caption{font-size:6.5px;left:16px}
+.memed-landing .campaign-top .mini-label{font-size:7px}
+.memed-landing .demo-pill{font-size:6.5px;padding:4px 7px}
+.memed-landing .campaign-title{margin:18px 0 16px}
+.memed-landing .campaign-title h2{font-size:25px}
+.memed-landing .campaign-title p{font-size:9px}
+.memed-landing .platforms{padding:7px 8px}
+.memed-landing .platforms svg{width:15px;height:15px}
+.memed-landing .campaign-media{gap:18px}
+.memed-landing .views-panel .mini-label{font-size:7px}
+.memed-landing .view-number{font-size:35px;letter-spacing:-1.6px}
+.memed-landing .view-sub{font-size:8px}
+.memed-landing .momentum-chart{margin-top:12px}
+.memed-landing .chart-note{font-size:6px}
+.memed-landing .post-bottom{font-size:5.5px}
+.memed-landing .milestone-heading{margin-top:21px}
+.memed-landing .milestone-heading .mini-label{font-size:7px}
+.memed-landing .milestone-heading>span:last-child{font-size:6px}
+.memed-landing .hero-ladder{margin-top:15px}
+.memed-landing .ladder-item{font-size:8px}
+.memed-landing .ladder-item strong{font-size:15px}
+.memed-landing .ladder-item small{font-size:5px;bottom:-13px}
+.memed-landing .milestone-node{width:25px;height:25px;font-size:8px}
+.memed-landing .milestone-node svg{width:12px;height:12px}
+.memed-landing .hero-ladder:before{top:12px}
+.memed-landing .next-progress{margin-top:27px}
+.memed-landing .next-progress>div:first-child{font-size:7px}
+.memed-landing .hero-budget small{font-size:7px}
+.memed-landing .hero-budget strong{font-size:12px}
+.memed-landing .earned-float{left:0;right:23px;bottom:28px;padding:13px 14px;border-radius:11px;gap:10px}
+.memed-landing .earned-float small{font-size:7px}
+.memed-landing .earned-float strong{font-size:21px;gap:12px}
+.memed-landing .earned-float strong span{font-size:6px;padding:3px 5px}
+.memed-landing .earned-icon{width:34px;height:34px}
+.memed-landing .earned-icon svg{width:21px;height:21px}
+.memed-landing .earned-check{width:17px;height:17px}
+.memed-landing .hero-footnote{bottom:0;font-size:6.5px;right:6px}
+.memed-landing .hero-bottom{margin-top:26px;padding:20px 0 25px;font-size:6px;letter-spacing:.7px}
+.memed-landing .hero-bottom>a{font-size:8px}
+.memed-landing .hero-bottom>a span{font-size:15px;margin-left:10px}
+.memed-landing .section-pad{padding:67px 0}
+.memed-landing .eyebrow{font-size:8px;letter-spacing:1.4px}
+.memed-landing .section-heading>.eyebrow,.memed-landing .how-heading .eyebrow,.memed-landing .why-heading .eyebrow{margin-bottom:17px}
+.memed-landing .section-heading h2,.memed-landing .how-heading h2,.memed-landing .why-heading h2{font-size:36px;letter-spacing:-1.8px}
+.memed-landing .section-heading>p:last-child{font-size:11px;margin-top:20px;max-width:280px}
+.memed-landing .section-heading>p:last-child br{display:block}
+.memed-landing .audience-grid{grid-template-columns:1fr;gap:18px;margin-top:29px}
+.memed-landing .audience-card{padding:27px 25px 25px;border-radius:18px;scroll-margin-top:95px}
+.memed-landing .card-kicker{margin-bottom:23px;font-size:8px}
+.memed-landing .audience-card h3{font-size:30px;letter-spacing:-1.5px}
+.memed-landing .audience-card>p{font-size:11px;max-width:380px}
+.memed-landing .mini-dashboard{padding:17px;margin:26px 0 24px}
+.memed-landing .dashboard-title{font-size:8px}
+.memed-landing .mini-budget strong{font-size:24px}
+.memed-landing .mini-budget>.mini-bars{height:47px;gap:6px}
+.memed-landing .mini-bars i{width:12px}
+.memed-landing .dashboard-bottom{font-size:6px}
+.memed-landing .text-cta{font-size:11px;min-height:30px}
+.memed-landing .how-section{padding-top:3px}
+.memed-landing .how-heading,.memed-landing .why-heading{display:block}
+.memed-landing .how-heading>p,.memed-landing .why-heading>p{font-size:11px;margin-top:18px;padding:0}
+.memed-landing .how-heading>p br,.memed-landing .why-heading>p br{display:none}
+.memed-landing .steps{grid-template-columns:1fr;gap:34px;margin-top:34px;padding-left:26px;border-left:1px solid #d8d3db;margin-left:5px}
+.memed-landing .step-number{margin-bottom:20px;padding-top:0;border-top:0}
+.memed-landing .step-number:before{left:-30px;top:10px}
+.memed-landing .step-number>span{font-size:13px}
+.memed-landing .step-number svg{width:16px;height:16px}
+.memed-landing .step-visual{height:130px;padding:20px;max-width:420px}
+.memed-landing .interface-label{font-size:7px}
+.memed-landing .opportunity-visual>strong{font-size:19px}
+.memed-landing .opportunity-visual>div{gap:26px}
+.memed-landing .link-input{font-size:8px;padding:11px}
+.memed-landing .visual-note{font-size:7px}
+.memed-landing .reward-visual>strong{font-size:20px;gap:10px}
+.memed-landing .step h3{font-size:26px;min-height:0;margin-top:21px;letter-spacing:-1.1px}
+.memed-landing .step h3 br{display:none}
+.memed-landing .step>p{font-size:11px;max-width:390px;margin-top:12px}
+.memed-landing .payout-grid{grid-template-columns:1fr;gap:31px}
+.memed-landing .payout-copy h2{font-size:41px;letter-spacing:-2px}
+.memed-landing .payout-copy .eyebrow{font-size:7px;letter-spacing:1.2px;margin-bottom:20px}
+.memed-landing .payout-copy>p:not(.eyebrow){font-size:12px;max-width:320px;margin-top:20px}
+.memed-landing .payout-rule{gap:12px;margin-top:22px}
+.memed-landing .payout-rule strong{font-size:11px}
+.memed-landing .payout-rule p{font-size:10px}
+.memed-landing .payout-rule>span{width:24px;height:24px;font-size:9px}
+.memed-landing .try-label{margin-top:17px;font-size:13px}
+.memed-landing .try-label svg{transform:rotate(50deg);width:65px;height:29px}
+.memed-landing .calculator{padding:23px 21px;border-radius:17px;max-width:500px;width:100%;margin:auto}
+.memed-landing .calculator-top .mini-label{font-size:6.5px;letter-spacing:.8px}
+.memed-landing .calculator .demo-pill{font-size:6px}
+.memed-landing .calculator-values{margin-top:28px}
+.memed-landing .calculator-values output{font-size:38px;letter-spacing:-1.7px}
+.memed-landing .calculator-values label,.memed-landing .calculator-values span{font-size:9px}
+.memed-landing .calculator-ladder{gap:8px;margin-top:23px}
+.memed-landing .calculator-ladder strong{font-size:21px}
+.memed-landing .calculator-ladder small{font-size:9px}
+.memed-landing .calculator-ladder button{padding:12px 3px 10px}
+.memed-landing .calc-state{font-size:5.5px}
+.memed-landing .next-reward{font-size:8px;padding:11px 9px;gap:6px}
+.memed-landing .budget-label{font-size:8px}
+.memed-landing .budget-label>span{font-size:7px}
+.memed-landing .budget-legend{font-size:6px;gap:5px}
+.memed-landing .budget-legend>span{gap:3px}
+.memed-landing .remaining-row{font-size:8px}
+.memed-landing .remaining-row strong{font-size:17px}
+.memed-landing .demo-explanation{font-size:6.5px}
+.memed-landing .bento-grid{grid-template-columns:1fr;gap:15px;margin-top:30px}
+.memed-landing .bento{min-height:254px;padding:25px;border-radius:16px}
+.memed-landing .bento h3{font-size:26px;margin-top:23px}
+.memed-landing .bento p{font-size:11px}
+.memed-landing .bento-ladder{gap:8px}
+.memed-landing .bento-ladder>span{width:100px;padding:11px 13px;font-size:14px}
+.memed-landing .bento-ladder small{font-size:8px}
+.memed-landing .budget-ring{width:115px;height:115px;right:30px;top:30px}
+.memed-landing .bento-budget h3{margin-top:105px}
+.memed-landing .bento-budget{min-height:272px}
+.memed-landing .safeguard-chips>span{font-size:8px;padding:9px 10px}
+.memed-landing .bento-safeguards,.memed-landing .bento-creators{min-height:247px}
+.memed-landing .submission-status{font-size:9px}
+.memed-landing .final-section{padding:70px 0 76px;text-align:left}
+.memed-landing .final-content .eyebrow{font-size:7px;margin-bottom:24px}
+.memed-landing .final-content h2{font-size:36px;letter-spacing:-1.7px;line-height:1.2}
+.memed-landing .final-content h2 br{display:block}
+.memed-landing .final-content>p:not(.eyebrow){font-size:11px;max-width:270px;margin-top:20px}
+.memed-landing .final-ctas{justify-content:flex-start;flex-direction:column;gap:11px;margin-top:25px;max-width:330px}
+.memed-landing .final-ctas .button{padding:15px 18px;font-size:11px;border-radius:10px;min-height:51px}
+.memed-landing .final-watermark{width:280px;height:280px;right:-130px;top:110px}
+.memed-landing .footer-main{display:grid;grid-template-columns:1fr auto;gap:29px 12px;padding:37px 0 30px;align-items:start}
+.memed-landing .footer-main>div:first-child{grid-column:1/-1}
+.memed-landing .footer-main .wordmark{font-size:28px}
+.memed-landing .footer-main p{font-size:10px;margin-top:14px}
+.memed-landing .footer-main nav{display:grid;grid-template-columns:1fr 1fr;gap:17px 24px;font-size:9px}
+.memed-landing .footer-main nav button{text-align:left;font-size:9px}
+.memed-landing .github-button{padding:0;gap:7px;font-size:9px}
+.memed-landing .github-button small{font-size:6px}
+.memed-landing .github-button>span:last-child{margin-left:0}
+.memed-landing .github-button svg{width:16px;height:16px}
+.memed-landing .footer-bottom{display:block;font-size:7px;padding:21px 0 25px}
+.memed-landing .footer-bottom>span:last-child{font-size:6px;margin-top:12px;letter-spacing:.8px}
+.memed-landing dialog{padding:31px 26px}
+.memed-landing dialog h2{font-size:31px}}
+@media(max-width:360px){.memed-landing .container,.memed-landing .nav-inner{width:calc(100% - 32px)}
+.memed-landing .hero h1{font-size:55px}
+.memed-landing .hero-copy .eyebrow{font-size:7px}
+.memed-landing .campaign-card{padding:16px;margin:0 4px}
+.memed-landing .campaign-media{gap:12px}
+.memed-landing .view-number{font-size:30px}
+.memed-landing .earned-float strong{font-size:19px;gap:7px}
+.memed-landing .earned-float strong span{font-size:5px}
+.memed-landing .earned-icon{width:29px;height:29px}
+.memed-landing .earned-float{gap:8px}
+.memed-landing .hero-ctas .button{padding:12px 10px}
+.memed-landing .hero-ctas strong{font-size:10px}
+.memed-landing .hero-ctas small{font-size:7px}
+.memed-landing .hero-bottom>span:first-child{font-size:5px}
+.memed-landing .section-heading h2{font-size:32px}
+.memed-landing .calculator{padding:22px 17px}
+.memed-landing .calculator-values output{font-size:34px}
+.memed-landing .budget-legend{font-size:5px}
+.memed-landing .safeguard-chips>span{font-size:7px}
+.memed-landing .bento-ladder>span{padding:10px}
+.memed-landing .final-content h2{font-size:32px}
+.memed-landing .audience-card h3{font-size:27px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}
+.memed-landing *,.memed-landing *:before,.memed-landing *:after{animation:none!important;transition:none!important}
+.memed-landing .chart-line{stroke-dashoffset:0}
+.memed-landing .js-motion .reveal{opacity:1;transform:none}
+.memed-landing .button:hover,.memed-landing .text-cta:hover,.memed-landing .audience-card:hover{transform:none}
+.memed-landing .earned-float{transform:rotate(-2deg)}}
+@media(max-width:760px){.memed-landing .hero-budget strong{font-size:14px}
+.memed-landing .hero-budget small{font-size:8px}
+.memed-landing .calculator .mini-label{font-size:7px}
+.memed-landing .demo-explanation{font-size:8px}
+.memed-landing .calculator-ladder .calc-state{font-size:7px}
+.memed-landing .budget-legend{font-size:7px}
+.memed-landing .remaining-row{font-size:9px}}
