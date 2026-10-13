@@ -16,6 +16,8 @@ export interface SignupInput {
   email: string;
   password: string;
   role: UserRole;
+  instagramUsername?: string;
+  youtubeChannelUrl?: string;
 }
 
 export interface LoginInput {

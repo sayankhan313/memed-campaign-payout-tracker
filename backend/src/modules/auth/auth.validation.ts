@@ -8,6 +8,23 @@ const emailSchema = z.preprocess(
   z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Invalid email address')
 );
 
+const instagramUsernameSchema = z.preprocess(
+  value => typeof value === 'string' ? (value.trim().replace(/^@/, '') || undefined) : value,
+  z.string().regex(/^(?!\.)(?!.*\.\.)(?!.*\.$)[A-Za-z0-9._]{1,30}$/, 'Enter a valid Instagram username').optional()
+);
+
+const youtubeChannelSchema = z.preprocess(
+  value => typeof value === 'string' ? (value.trim() || undefined) : value,
+  z.string().max(250, 'YouTube channel URL must be under 250 characters').url('Enter a valid YouTube channel URL').refine(value => {
+    try {
+      const parsed = new URL(value);
+      return parsed.protocol === 'https:' && ['youtube.com', 'www.youtube.com', 'm.youtube.com'].includes(parsed.hostname) && /^\/(?:@[^/]+|channel\/[^/]+|c\/[^/]+|user\/[^/]+)\/?$/.test(parsed.pathname);
+    } catch {
+      return false;
+    }
+  }, 'Enter a valid HTTPS YouTube channel link').optional()
+);
+
 const signupSchema = z.object({
   name: z.preprocess(
     value => typeof value === 'string' ? value.trim() : '',
@@ -22,6 +39,12 @@ const signupSchema = z.object({
     )
   ),
   role: z.enum(['brand', 'creator'], { error: 'Invalid user role' }),
+  instagramUsername: instagramUsernameSchema,
+  youtubeChannelUrl: youtubeChannelSchema,
+}).superRefine((input, ctx) => {
+  if (input.role === 'brand' && (input.instagramUsername || input.youtubeChannelUrl)) {
+    ctx.addIssue({ code: 'custom', message: 'Social profiles can only be added to Creator accounts', path: ['role'] });
+  }
 });
 
 const loginSchema = z.object({

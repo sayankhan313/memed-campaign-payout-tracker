@@ -67,8 +67,8 @@ export async function updateSubmissionViews(
         throw new AppError('Campaign not found', 404);
       }
 
-      if (campaign.status !== 'live') {
-        throw new AppError('Campaign is not active', 409);
+      if (!['live', 'paused', 'completed'].includes(campaign.status)) {
+        throw new AppError('Archived campaigns no longer process payouts', 409);
       }
 
       const targetPayout = calculateHighestMilestonePayout(campaign.milestones, views);
@@ -82,7 +82,7 @@ export async function updateSubmissionViews(
         const updatedCampaign = await CampaignModel.updateOne(
           {
             _id: campaign._id,
-            status: 'live',
+            status: { $in: ['live', 'paused', 'completed'] },
             budgetSpent: { $lte: campaign.totalBudget - additionalPayout },
           },
           { $inc: { budgetSpent: additionalPayout } },

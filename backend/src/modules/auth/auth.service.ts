@@ -1,21 +1,9 @@
 
 import { UserModel } from './auth.model.js';
-import type { UserRole } from './auth.types.js';
+import type { SignupInput, LoginInput } from './auth.types.js';
 import { AppError } from '../../errors/app.error.js';
 import { generateAccessToken } from '../../utils/jwt.util.js';
 import { hashPassword, comparePassword } from '../../utils/password.util.js';
-
-interface SignupInput {
-  name: string;
-  email: string;
-  password: string;
-  role: UserRole;
-}
-
-interface LoginInput {
-  email: string;
-  password: string;
-}
 
 export const signup = async (input: SignupInput) => {
   const email = input.email.trim().toLowerCase();
@@ -36,6 +24,10 @@ export const signup = async (input: SignupInput) => {
       email,
       passwordHash,
       role: input.role,
+      ...(input.role === 'creator' ? {
+        instagramUsername: input.instagramUsername,
+        youtubeChannelUrl: input.youtubeChannelUrl,
+      } : {}),
     });
   } catch (error) {
     if (
@@ -63,6 +55,10 @@ export const signup = async (input: SignupInput) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      ...(user.role === 'creator' ? {
+        instagramUsername: user.instagramUsername,
+        youtubeChannelUrl: user.youtubeChannelUrl,
+      } : {}),
     },
   };
 };
@@ -99,13 +95,17 @@ export const login = async (input: LoginInput) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      ...(user.role === 'creator' ? {
+        instagramUsername: user.instagramUsername,
+        youtubeChannelUrl: user.youtubeChannelUrl,
+      } : {}),
     },
   };
 };
 
 export const getCurrentUser = async (userId: string) => {
   const user = await UserModel.findById(userId)
-    .select('name email role');
+    .select('name email role instagramUsername youtubeChannelUrl');
 
   if (!user) {
     throw new AppError('User not found', 404);
@@ -116,5 +116,9 @@ export const getCurrentUser = async (userId: string) => {
     name: user.name,
     email: user.email,
     role: user.role,
+    ...(user.role === 'creator' ? {
+      instagramUsername: user.instagramUsername,
+      youtubeChannelUrl: user.youtubeChannelUrl,
+    } : {}),
   };
 };

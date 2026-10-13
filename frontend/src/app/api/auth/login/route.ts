@@ -6,6 +6,8 @@ type BackendUser = {
   name: string;
   email: string;
   role: string;
+  instagramUsername?: string;
+  youtubeChannelUrl?: string;
 };
 
 type BackendLoginResponse = {
@@ -100,6 +102,10 @@ export async function POST(request: NextRequest) {
         name: user.name,
         email: user.email,
         role,
+        ...(role === "creator" ? {
+          instagramUsername: user.instagramUsername,
+          youtubeChannelUrl: user.youtubeChannelUrl,
+        } : {}),
       },
     });
 

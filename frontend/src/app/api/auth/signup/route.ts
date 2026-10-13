@@ -6,6 +6,8 @@ type BackendUser = {
   name: string;
   email: string;
   role: "brand" | "creator";
+  instagramUsername?: string;
+  youtubeChannelUrl?: string;
 };
 
 type BackendSignupResponse = {
@@ -41,7 +43,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name, email, password, role } = input;
+    const { name, email, password, role, instagramUsername, youtubeChannelUrl } = input;
 
     if (
       typeof name !== "string" ||
@@ -53,6 +55,13 @@ export async function POST(request: NextRequest) {
         { success: false, message: "Please provide valid signup details." },
         { status: 400 }
       );
+    }
+
+    if (role === "creator" && (
+      (instagramUsername !== undefined && typeof instagramUsername !== "string") ||
+      (youtubeChannelUrl !== undefined && typeof youtubeChannelUrl !== "string")
+    )) {
+      return NextResponse.json({ success: false, message: "Invalid Creator profile details." }, { status: 400 });
     }
 
     const backendUrl = (
@@ -69,6 +78,10 @@ export async function POST(request: NextRequest) {
         email: email.trim().toLowerCase(),
         password,
         role,
+        ...(role === "creator" ? {
+          instagramUsername: typeof instagramUsername === "string" ? instagramUsername.trim() : undefined,
+          youtubeChannelUrl: typeof youtubeChannelUrl === "string" ? youtubeChannelUrl.trim() : undefined,
+        } : {}),
       }),
       cache: "no-store",
       signal: AbortSignal.timeout(12000),
@@ -123,6 +136,10 @@ export async function POST(request: NextRequest) {
           name: user.name,
           email: user.email,
           role: user.role,
+          ...(user.role === "creator" ? {
+            instagramUsername: user.instagramUsername,
+            youtubeChannelUrl: user.youtubeChannelUrl,
+          } : {}),
         },
       },
       { status: 201 }

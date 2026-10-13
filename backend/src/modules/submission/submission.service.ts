@@ -22,7 +22,7 @@ function formatSubmission(submission: SubmissionDocument): SubmissionResponse {
 
 export async function createSubmission(creatorId: string, body: unknown): Promise<SubmissionResponse> {
   const input = validateCreateSubmission(body);
-  const campaign = await CampaignModel.findById(input.campaignId).select('status platform').exec();
+  const campaign = await CampaignModel.findById(input.campaignId).select('status platform totalBudget budgetSpent').exec();
 
   if (!campaign) {
     throw new AppError('Campaign not found', 404);
@@ -30,6 +30,10 @@ export async function createSubmission(creatorId: string, body: unknown): Promis
 
   if (campaign.status !== 'live') {
     throw new AppError('This campaign is not accepting submissions', 409);
+  }
+
+  if (campaign.budgetSpent >= campaign.totalBudget) {
+    throw new AppError('Campaign budget is exhausted', 409);
   }
 
   if (detectPostPlatform(input.postUrl) !== campaign.platform) {

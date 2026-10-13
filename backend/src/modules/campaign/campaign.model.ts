@@ -31,6 +31,12 @@ const campaignSchema = new Schema<Campaign>({
     minlength: 3,
     maxlength: 100,
   },
+  description: {
+    type: String,
+    trim: true,
+    maxlength: 1000,
+    default: '',
+  },
   platform: {
     type: String,
     enum: ['instagram', 'youtube'],
@@ -59,7 +65,7 @@ const campaignSchema = new Schema<Campaign>({
   },
   status: {
     type: String,
-    enum: ['live', 'paused'],
+    enum: ['live', 'paused', 'completed', 'archived'],
     default: 'live',
     required: true,
   },

@@ -13,6 +13,8 @@ type SignupErrors = {
   email?: string;
   password?: string;
   confirmPassword?: string;
+  instagramUsername?: string;
+  youtubeChannelUrl?: string;
 };
 
 type SignupResponse = {
@@ -264,6 +266,8 @@ function SignupContent() {
       : null;
 
   const [name, setName] = useState("");
+  const [instagramUsername, setInstagramUsername] = useState("");
+  const [youtubeChannelUrl, setYoutubeChannelUrl] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -283,6 +287,26 @@ function SignupContent() {
 
     if (cleanName.length < 2 || cleanName.length > 80) {
       nextErrors.name = "Name must be between 2 and 80 characters.";
+    }
+
+    if (role === "creator") {
+      const username = instagramUsername.trim().replace(/^@/, "");
+      const youtubeLink = youtubeChannelUrl.trim();
+
+      if (username && !/^(?!\.)(?!.*\.\.)(?!.*\.$)[A-Za-z0-9._]{1,30}$/.test(username)) {
+        nextErrors.instagramUsername = "Enter a valid Instagram username (up to 30 characters).";
+      }
+
+      if (youtubeLink) {
+        try {
+          const parsed = new URL(youtubeLink);
+          if (parsed.protocol !== "https:" || !["youtube.com", "www.youtube.com", "m.youtube.com"].includes(parsed.hostname) || !/^\/(?:@[^/]+|channel\/[^/]+|c\/[^/]+|user\/[^/]+)\/?$/.test(parsed.pathname) || youtubeLink.length > 250) {
+            nextErrors.youtubeChannelUrl = "Enter an HTTPS YouTube channel link, such as youtube.com/@creator.";
+          }
+        } catch {
+          nextErrors.youtubeChannelUrl = "Enter a valid YouTube channel URL.";
+        }
+      }
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
@@ -325,6 +349,10 @@ function SignupContent() {
           email: cleanEmail,
           password,
           role,
+          ...(role === "creator" ? {
+            instagramUsername: instagramUsername.trim(),
+            youtubeChannelUrl: youtubeChannelUrl.trim(),
+          } : {}),
         }),
       });
 
@@ -338,7 +366,9 @@ function SignupContent() {
             if (
               error.field === "name" ||
               error.field === "email" ||
-              error.field === "password"
+              error.field === "password" ||
+              error.field === "instagramUsername" ||
+              error.field === "youtubeChannelUrl"
             ) {
               serverErrors[error.field] = error.message;
             }
@@ -405,7 +435,7 @@ function SignupContent() {
         <SignupStory role={role} />
 
         <main className="flex flex-col bg-[#F7F5F0] text-[#191628]">
-          {/* Mobile header */}
+
           <div className="flex items-center justify-between gap-3 bg-[#191628] px-5 py-4 text-white lg:hidden">
             <BrandLogo />
 
@@ -451,21 +481,21 @@ function SignupContent() {
                 
                 <div>
                   <label htmlFor="signup-name" className="mb-1.5 block text-[12px] font-semibold">
-                    Full Name
+                    {isBrand ? "Brand / Company Name" : "Creator Display Name"}
                   </label>
 
                   <input
                     id="signup-name"
                     name="name"
                     type="text"
-                    autoComplete="name"
+                    autoComplete={isBrand ? "organization" : "name"}
                     value={name}
                     onChange={(event) => {
                       setName(event.target.value);
                       setErrors((previous) => ({ ...previous, name: undefined }));
                       setFormError("");
                     }}
-                    placeholder="Your full name"
+                    placeholder={isBrand ? "Your brand or company" : "Your creator name"}
                     disabled={loading}
                     aria-invalid={Boolean(errors.name)}
                     aria-describedby={errors.name ? "signup-name-error" : undefined}
@@ -478,6 +508,58 @@ function SignupContent() {
                     </p>
                   )}
                 </div>
+
+                {!isBrand && (
+                  <div className="mt-4 rounded-2xl border border-[#E6DDF3] bg-[#F2EDFA]/60 p-4">
+                    <div className="mb-4">
+                      <h3 className="text-[13px] font-bold text-[#342847]">Your social profiles <span className="font-normal text-[#8B8199]">(optional)</span></h3>
+                      <p className="mt-1 text-[11px] leading-5 text-[#81768D]">Share where you create content. These links are not verified.</p>
+                    </div>
+
+                    <div>
+                      <label htmlFor="signup-instagram" className="mb-1.5 block text-[12px] font-semibold">Instagram Username</label>
+                      <input
+                        id="signup-instagram"
+                        name="instagramUsername"
+                        type="text"
+                        autoComplete="off"
+                        value={instagramUsername}
+                        onChange={event => {
+                          setInstagramUsername(event.target.value);
+                          setErrors(previous => ({ ...previous, instagramUsername: undefined }));
+                          setFormError("");
+                        }}
+                        placeholder="@yourhandle"
+                        disabled={loading}
+                        aria-invalid={Boolean(errors.instagramUsername)}
+                        className={`${inputClass} ${errors.instagramUsername ? "!border-red-400" : ""}`}
+                      />
+                      {errors.instagramUsername && <p className="mt-1 text-[11px] text-red-600">{errors.instagramUsername}</p>}
+                    </div>
+
+                    <div className="mt-3">
+                      <label htmlFor="signup-youtube" className="mb-1.5 block text-[12px] font-semibold">YouTube Channel URL</label>
+                      <input
+                        id="signup-youtube"
+                        name="youtubeChannelUrl"
+                        type="url"
+                        inputMode="url"
+                        autoComplete="url"
+                        value={youtubeChannelUrl}
+                        onChange={event => {
+                          setYoutubeChannelUrl(event.target.value);
+                          setErrors(previous => ({ ...previous, youtubeChannelUrl: undefined }));
+                          setFormError("");
+                        }}
+                        placeholder="https://www.youtube.com/@yourchannel"
+                        disabled={loading}
+                        aria-invalid={Boolean(errors.youtubeChannelUrl)}
+                        className={`${inputClass} ${errors.youtubeChannelUrl ? "!border-red-400" : ""}`}
+                      />
+                      {errors.youtubeChannelUrl && <p className="mt-1 text-[11px] text-red-600">{errors.youtubeChannelUrl}</p>}
+                    </div>
+                  </div>
+                )}
 
                 <div className="mt-3">
                   <label htmlFor="signup-email" className="mb-1.5 block text-[12px] font-semibold">
@@ -510,7 +592,6 @@ function SignupContent() {
                   )}
                 </div>
 
-                {/* Password */}
                 <div className="mt-3">
                   <label htmlFor="signup-password" className="mb-1.5 block text-[12px] font-semibold">
                     Password
@@ -556,7 +637,6 @@ function SignupContent() {
                   )}
                 </div>
 
-                {/* Confirm password */}
                 <div className="mt-3">
                   <label htmlFor="signup-confirm-password" className="mb-1.5 block text-[12px] font-semibold">
                     Confirm Password
@@ -600,7 +680,6 @@ function SignupContent() {
                   )}
                 </div>
 
-                {/* Server error */}
                 {formError && (
                   <div
                     role="alert"
@@ -610,7 +689,6 @@ function SignupContent() {
                   </div>
                 )}
 
-                {/* Submit */}
                 <button
                   type="submit"
                   disabled={loading}
