@@ -1,0 +1,41 @@
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import type { ReactNode } from 'react';
+import CreatorShell from '@/components/creator/creator-shell';
+
+export const instant = false;
+
+type CreatorProfile = { role?: string; name?: string; instagramUsername?: string; youtubeChannelUrl?: string };
+
+export default async function CreatorLayout({ children }: { children: ReactNode }) {
+  const token = (await cookies()).get('memed_access_token')?.value;
+  if (!token) redirect('/login');
+
+  let response: Response;
+  try {
+    const backendUrl = (process.env.BACKEND_URL ?? 'http://127.0.0.1:5001').replace(/\/$/, '');
+    response = await fetch(`${backendUrl}/api/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: 'no-store',
+    });
+  } catch {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center bg-[#F7F5F0] px-6 text-center">
+        <h1 className="text-2xl font-black text-[#191628]">Unable to connect to the server</h1>
+        <p className="mt-3 text-sm text-[#817A89]">Please check that the Meme’d backend is available.</p>
+      </main>
+    );
+  }
+
+  if (response.status === 401) redirect('/login');
+  if (!response.ok) throw new Error('Unable to verify Creator account');
+
+  const result: { data?: CreatorProfile } = await response.json();
+  if (result.data?.role !== 'creator') redirect('/choose-role');
+
+  return (
+    <CreatorShell creatorName={result.data?.name?.trim() || 'Creator'} instagramUsername={result.data?.instagramUsername} youtubeChannelUrl={result.data?.youtubeChannelUrl}>
+      {children}
+    </CreatorShell>
+  );
+}
