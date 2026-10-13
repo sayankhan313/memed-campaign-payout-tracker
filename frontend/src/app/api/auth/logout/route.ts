@@ -1,13 +1,24 @@
 
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST() {
-  const cookieStore = await cookies();
-  cookieStore.delete('memed_access_token');
+export async function POST(request: NextRequest) {
+  const isBrowserNavigation = request.headers.get('accept')?.includes('text/html') ?? false;
 
-  return NextResponse.json({
-    success: true,
-    message: 'Logged out successfully',
+  const response = isBrowserNavigation
+    ? NextResponse.redirect(new URL('/login', request.url), 303)
+    : NextResponse.json({ success: true, message: 'Logged out successfully' });
+
+  response.cookies.set({
+    name: 'memed_access_token',
+    value: '',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 0,
   });
+
+  response.headers.set('Cache-Control', 'no-store');
+
+  return response;
 }
