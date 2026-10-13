@@ -1,27 +1,22 @@
 
 import type { RequestHandler } from 'express';
-import { signupSchema, loginSchema } from './auth.validation.js';
+import { AppError } from '../../errors/app.error.js';
 import { signup, login, getCurrentUser } from './auth.service.js';
-import { AuthError } from './auth.error.js';
+import { validateSignupInput, validateLoginInput } from './auth.validation.js';
 
 export const signupController: RequestHandler = async (req, res, next) => {
   try {
-    const result = signupSchema.safeParse(req.body);
+    const input = validateSignupInput(req.body);
+    const result = await signup(input);
 
-    if (!result.success) {
-      res.status(400).json({
-        success: false,
-        message: 'Invalid signup details',
-        errors: result.error.issues.map(issue => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        })),
-      });
-      return;
-    }
-
-    const data = await signup(result.data);
-    res.status(201).json({ success: true, data });
+    res.status(201).json({
+      success: true,
+      message: result.message,
+      data: {
+        accessToken: result.accessToken,
+        user: result.user,
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -29,22 +24,17 @@ export const signupController: RequestHandler = async (req, res, next) => {
 
 export const loginController: RequestHandler = async (req, res, next) => {
   try {
-    const result = loginSchema.safeParse(req.body);
+    const input = validateLoginInput(req.body);
+    const result = await login(input);
 
-    if (!result.success) {
-      res.status(400).json({
-        success: false,
-        message: 'Invalid login details',
-        errors: result.error.issues.map(issue => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        })),
-      });
-      return;
-    }
-
-    const data = await login(result.data);
-    res.status(200).json({ success: true, data });
+    res.status(200).json({
+      success: true,
+      message: result.message,
+      data: {
+        accessToken: result.accessToken,
+        user: result.user,
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -53,11 +43,15 @@ export const loginController: RequestHandler = async (req, res, next) => {
 export const meController: RequestHandler = async (req, res, next) => {
   try {
     if (!req.authUser) {
-      throw new AuthError('Authentication required', 401);
+      throw new AppError('Authentication required', 401);
     }
 
     const user = await getCurrentUser(req.authUser.id);
-    res.status(200).json({ success: true, data: { user } });
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
   } catch (error) {
     next(error);
   }

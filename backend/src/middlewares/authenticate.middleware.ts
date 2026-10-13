@@ -1,16 +1,14 @@
 
 import type { RequestHandler } from 'express';
 import { isValidObjectId } from 'mongoose';
-import { UserModel, type UserRole } from '../modules/auth/auth.model.js';
-import { verifyAccessToken } from '../modules/auth/auth.jwt.js';
-import { AuthError } from '../modules/auth/auth.error.js';
+import { UserModel } from '../modules/auth/auth.model.js';
+import type { AuthenticatedUser } from '../modules/auth/auth.types.js';
+import { verifyAccessToken } from '../utils/jwt.util.js';
+import { AppError } from '../errors/app.error.js';
 
 declare module 'express-serve-static-core' {
   interface Request {
-    authUser?: {
-      id: string;
-      role: UserRole;
-    };
+    authUser?: AuthenticatedUser;
   }
 }
 
@@ -19,20 +17,20 @@ export const requireAuth: RequestHandler = async (req, _res, next) => {
     const authorization = req.headers.authorization;
 
     if (!authorization?.startsWith('Bearer ')) {
-      throw new AuthError('Authentication required', 401);
+      throw new AppError('Authentication required', 401);
     }
 
     const token = authorization.slice(7).trim();
     const payload = verifyAccessToken(token);
 
     if (!isValidObjectId(payload.userId)) {
-      throw new AuthError('Invalid authentication token', 401);
+      throw new AppError('Invalid authentication token', 401);
     }
 
     const user = await UserModel.findById(payload.userId).select('role');
 
     if (!user || user.role !== payload.role) {
-      throw new AuthError('Invalid or unavailable account', 401);
+      throw new AppError('Invalid or unavailable account', 401);
     }
 
     req.authUser = {

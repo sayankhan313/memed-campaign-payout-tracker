@@ -1,75 +1,120 @@
 
-import bcrypt from 'bcryptjs';
-import type { HydratedDocument } from 'mongoose';
-import { UserModel, type IUser } from './auth.model.js';
-import { AuthError } from './auth.error.js';
-import { generateAccessToken } from './auth.jwt.js';
-import type { SignupInput, LoginInput } from './auth.validation.js';
+import { UserModel } from './auth.model.js';
+import type { UserRole } from './auth.types.js';
+import { AppError } from '../../errors/app.error.js';
+import { generateAccessToken } from '../../utils/jwt.util.js';
+import { hashPassword, comparePassword } from '../../utils/password.util.js';
 
-const toPublicUser = (user: HydratedDocument<IUser>) => ({
-  id: String(user._id),
-  name: user.name,
-  email: user.email,
-  role: user.role,
-});
+interface SignupInput {
+  name: string;
+  email: string;
+  password: string;
+  role: UserRole;
+}
+
+interface LoginInput {
+  email: string;
+  password: string;
+}
 
 export const signup = async (input: SignupInput) => {
-  const existingUser = await UserModel.exists({ email: input.email });
+  const email = input.email.trim().toLowerCase();
+
+  const existingUser = await UserModel.findOne({ email });
 
   if (existingUser) {
-    throw new AuthError('An account with this email already exists', 409);
+    throw new AppError('Email already registered', 409);
   }
 
-  const passwordHash = await bcrypt.hash(input.password, 12);
-  let user: HydratedDocument<IUser>;
+  const passwordHash = await hashPassword(input.password);
+
+  let user;
 
   try {
     user = await UserModel.create({
-      name: input.name,
-      email: input.email,
+      name: input.name.trim(),
+      email,
       passwordHash,
       role: input.role,
     });
   } catch (error) {
-    if (error && typeof error === 'object' && 'code' in error && error.code === 11000) {
-      throw new AuthError('An account with this email already exists', 409);
+    if (
+      error !== null &&
+      typeof error === 'object' &&
+      'code' in error &&
+      error.code === 11000
+    ) {
+      throw new AppError('Email already registered', 409);
     }
+
     throw error;
   }
 
+  const accessToken = generateAccessToken(
+    String(user._id),
+    user.role
+  );
+
   return {
     message: 'Account created successfully',
-    user: toPublicUser(user),
-    accessToken: generateAccessToken(String(user._id), user.role),
+    accessToken,
+    user: {
+      id: String(user._id),
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
   };
 };
 
 export const login = async (input: LoginInput) => {
-  const user = await UserModel.findOne({ email: input.email }).select('+passwordHash');
+  const email = input.email.trim().toLowerCase();
+
+  const user = await UserModel.findOne({ email })
+    .select('+passwordHash');
 
   if (!user) {
-    throw new AuthError('Invalid email or password', 401);
+    throw new AppError('Invalid email or password', 401);
   }
 
-  const isPasswordValid = await bcrypt.compare(input.password, user.passwordHash);
+  const passwordMatches = await comparePassword(
+    input.password,
+    user.passwordHash
+  );
 
-  if (!isPasswordValid) {
-    throw new AuthError('Invalid email or password', 401);
+  if (!passwordMatches) {
+    throw new AppError('Invalid email or password', 401);
   }
+
+  const accessToken = generateAccessToken(
+    String(user._id),
+    user.role
+  );
 
   return {
     message: 'Login successful',
-    user: toPublicUser(user),
-    accessToken: generateAccessToken(String(user._id), user.role),
+    accessToken,
+    user: {
+      id: String(user._id),
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
   };
 };
 
 export const getCurrentUser = async (userId: string) => {
-  const user = await UserModel.findById(userId);
+  const user = await UserModel.findById(userId)
+    .select('name email role');
 
   if (!user) {
-    throw new AuthError('User account not found', 404);
+    throw new AppError('User not found', 404);
   }
 
-  return toPublicUser(user);
+  return {
+    id: String(user._id),
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
 };
