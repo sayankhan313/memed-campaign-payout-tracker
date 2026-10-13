@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import authRoutes from './modules/auth/auth.routes.js';
 import campaignRoutes from './modules/campaign/campaign.routes.js';
+import submissionRoutes from './modules/submission/submission.routes.js';
 import { errorHandler } from './middlewares/error.middleware.js';
 
 const app = express();
@@ -19,6 +20,7 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/campaigns', campaignRoutes);
+app.use('/api/submissions', submissionRoutes);
 
 app.use((_req, res) => {
   res.status(404).json({ success: false, message: 'API endpoint not found' });
