@@ -38,13 +38,13 @@ export default function ChooseRolePage() {
       className="relative min-h-screen overflow-x-hidden bg-[#191628] text-[#F7F5F0]"
       style={{ fontFamily: '"Inter", sans-serif' }}
     >
-      {/* Original background */}
+      
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -top-60 left-1/2 size-[650px] -translate-x-1/2 rounded-full bg-[#A88BFA]/15 blur-3xl"
       />
 
-      {/* Original header */}
+     
       <header className="relative mx-auto flex h-20 max-w-7xl items-center justify-between border-b border-white/10 px-5 sm:h-24 sm:px-10">
         <Link
           href="/"
@@ -98,7 +98,7 @@ export default function ChooseRolePage() {
           </p>
         </div>
 
-        {/* Original card dimensions preserved */}
+        
         <div
           role="group"
           aria-label="Choose your role"
@@ -179,7 +179,7 @@ export default function ChooseRolePage() {
         </div>
       </main>
 
-      {/* Original footer */}
+     
       <footer className="relative mx-auto flex max-w-7xl items-center justify-between gap-4 border-t border-white/10 px-5 py-6 text-xs text-[#ADA5C0] sm:px-10">
         <span>© 2026 Meme’d</span>
 
