@@ -1,9 +1,9 @@
 
 import type { RequestHandler } from 'express';
 import { isValidObjectId } from 'mongoose';
-import { UserModel, type UserRole } from './auth.model.js';
-import { verifyAccessToken } from './auth.jwt.js';
-import { AuthError } from './auth.error.js';
+import { UserModel, type UserRole } from '../modules/auth/auth.model.js';
+import { verifyAccessToken } from '../modules/auth/auth.jwt.js';
+import { AuthError } from '../modules/auth/auth.error.js';
 
 declare module 'express-serve-static-core' {
   interface Request {
@@ -35,25 +35,13 @@ export const requireAuth: RequestHandler = async (req, _res, next) => {
       throw new AuthError('Invalid or unavailable account', 401);
     }
 
-    req.authUser = { id: String(user._id), role: user.role };
+    req.authUser = {
+      id: String(user._id),
+      role: user.role,
+    };
+
     next();
   } catch (error) {
     next(error);
   }
-};
-
-export const requireRole = (...allowedRoles: UserRole[]): RequestHandler => {
-  return (req, _res, next) => {
-    if (!req.authUser) {
-      next(new AuthError('Authentication required', 401));
-      return;
-    }
-
-    if (!allowedRoles.includes(req.authUser.role)) {
-      next(new AuthError('Access denied for this role', 403));
-      return;
-    }
-
-    next();
-  };
 };

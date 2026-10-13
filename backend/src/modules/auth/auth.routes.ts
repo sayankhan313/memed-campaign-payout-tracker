@@ -2,7 +2,7 @@
 import { Router } from 'express';
 import { rateLimit } from 'express-rate-limit';
 import { signupController, loginController, meController } from './auth.controller.js';
-import { requireAuth } from './auth.middleware.js';
+import { requireAuth } from '../../middlewares/authenticate.middleware.js';
 
 const router = Router();
 
@@ -11,7 +11,10 @@ const authLimiter = rateLimit({
   limit: 30,
   standardHeaders: 'draft-8',
   legacyHeaders: false,
-  message: { success: false, message: 'Too many attempts. Please try again later.' },
+  message: {
+    success: false,
+    message: 'Too many attempts. Please try again later.',
+  },
 });
 
 router.post('/signup', authLimiter, signupController);
