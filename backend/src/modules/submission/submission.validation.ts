@@ -1,25 +1,47 @@
 
+import { z } from 'zod';
 import { AppError } from '../../errors/app.error.js';
 import type { CampaignPlatform } from '../campaign/campaign.types.js';
 import type { CreateSubmissionInput } from './submission.types.js';
 
+const createSubmissionSchema = z.object({
+  campaignId: z.string().regex(/^[a-fA-F0-9]{24}$/, 'Invalid campaign ID'),
+  postUrl: z.string()
+    .trim()
+    .min(1, 'Post URL is required')
+    .max(2048, 'Post URL must not exceed 2048 characters')
+    .url('Invalid post URL')
+    .refine(value => {
+      const url = new URL(value);
+      return url.protocol === 'https:' && !url.username && !url.password;
+    }, 'Post URL must be a valid HTTPS link'),
+});
+
 export function detectPostPlatform(postUrl: string): CampaignPlatform {
-  const url = new URL(postUrl);
+  let url: URL;
+
+  try {
+    url = new URL(postUrl);
+  } catch {
+    throw new AppError('Invalid post URL', 400);
+  }
+
   const host = url.hostname.toLowerCase();
   const parts = url.pathname.split('/').filter(Boolean);
+  const firstSegment = parts[0];
 
   if (host === 'instagram.com' || host === 'www.instagram.com') {
-    if (['p', 'reel', 'tv'].includes(parts[0]) && parts.length >= 2) {
+    if (firstSegment && ['p', 'reel', 'tv'].includes(firstSegment) && parts.length >= 2) {
       return 'instagram';
     }
   }
 
   if (['youtube.com', 'www.youtube.com', 'm.youtube.com'].includes(host)) {
-    if (parts[0] === 'watch' && url.searchParams.has('v') && url.searchParams.get('v')) {
+    if (firstSegment === 'watch' && url.searchParams.get('v')) {
       return 'youtube';
     }
 
-    if (['shorts', 'live'].includes(parts[0]) && parts.length >= 2) {
+    if (firstSegment && ['shorts', 'live'].includes(firstSegment) && parts.length >= 2) {
       return 'youtube';
     }
   }
@@ -32,36 +54,22 @@ export function detectPostPlatform(postUrl: string): CampaignPlatform {
 }
 
 export function validateCreateSubmission(body: unknown): CreateSubmissionInput {
-  if (!body || typeof body !== 'object' || Array.isArray(body)) {
-    throw new AppError('Invalid submission details', 400);
+  const result = createSubmissionSchema.safeParse(body);
+
+  if (!result.success) {
+    throw new AppError(
+      result.error.issues[0]?.message ?? 'Invalid submission details',
+      400
+    );
   }
 
-  const input = body as Record<string, unknown>;
-  const campaignId = input.campaignId;
-  const postUrl = typeof input.postUrl === 'string' ? input.postUrl.trim() : '';
+  detectPostPlatform(result.data.postUrl);
 
-  if (typeof campaignId !== 'string' || !/^[a-fA-F0-9]{24}$/.test(campaignId)) {
-    throw new AppError('Invalid campaign ID', 400);
-  }
-
-  if (!postUrl || postUrl.length > 2048) {
-    throw new AppError('Post URL is required and must be under 2048 characters', 400);
-  }
-
-  let url: URL;
-
-  try {
-    url = new URL(postUrl);
-  } catch {
-    throw new AppError('Invalid post URL', 400);
-  }
-
-  if (url.protocol !== 'https:' || url.username || url.password) {
-    throw new AppError('Post URL must be a valid HTTPS link', 400);
-  }
-
-  detectPostPlatform(postUrl);
+  const url = new URL(result.data.postUrl);
   url.hash = '';
 
-  return { campaignId, postUrl: url.toString() };
+  return {
+    campaignId: result.data.campaignId,
+    postUrl: url.toString(),
+  };
 }

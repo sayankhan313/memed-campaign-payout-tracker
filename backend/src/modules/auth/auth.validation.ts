@@ -1,78 +1,61 @@
 
+import { z } from 'zod';
 import { AppError } from '../../errors/app.error.js';
-import type { UserRole } from './auth.types.js';
+import type { SignupInput, LoginInput } from './auth.types.js';
 
-interface SignupInput {
-  name: string;
-  email: string;
-  password: string;
-  role: UserRole;
-}
+const emailSchema = z.preprocess(
+  value => typeof value === 'string' ? value.trim().toLowerCase() : '',
+  z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Invalid email address')
+);
 
-interface LoginInput {
-  email: string;
-  password: string;
-}
+const signupSchema = z.object({
+  name: z.preprocess(
+    value => typeof value === 'string' ? value.trim() : '',
+    z.string().min(2, 'Name must be between 2 and 80 characters').max(80, 'Name must be between 2 and 80 characters')
+  ),
+  email: emailSchema,
+  password: z.preprocess(
+    value => typeof value === 'string' ? value : '',
+    z.string().refine(
+      value => value.length >= 8 && value.length <= 128 && /[A-Z]/.test(value) && /[a-z]/.test(value) && /[0-9]/.test(value) && /[^A-Za-z0-9\s]/.test(value),
+      'Password must contain 8-128 characters, uppercase, lowercase, number and special character'
+    )
+  ),
+  role: z.enum(['brand', 'creator'], { error: 'Invalid user role' }),
+});
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
+const loginSchema = z.object({
+  email: emailSchema,
+  password: z.preprocess(
+    value => typeof value === 'string' ? value : '',
+    z.string().min(1, 'Password is required')
+  ),
+});
 
 export function validateSignupInput(body: unknown): SignupInput {
-  if (!isRecord(body)) {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
     throw new AppError('Invalid signup details', 400);
   }
 
-  const name = typeof body.name === 'string' ? body.name.trim() : '';
-  const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
-  const password = body.password;
-  const role = body.role;
+  const result = signupSchema.safeParse(body);
 
-  if (name.length < 2 || name.length > 80) {
-    throw new AppError('Name must be between 2 and 80 characters', 400);
+  if (!result.success) {
+    throw new AppError(result.error.issues[0]?.message ?? 'Invalid signup details', 400);
   }
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    throw new AppError('Invalid email address', 400);
-  }
-
-  if (
-    typeof password !== 'string' ||
-    password.length < 8 ||
-    password.length > 128 ||
-    !/[A-Z]/.test(password) ||
-    !/[a-z]/.test(password) ||
-    !/[0-9]/.test(password) ||
-    !/[^A-Za-z0-9\s]/.test(password)
-  ) {
-    throw new AppError(
-      'Password must contain 8-128 characters, uppercase, lowercase, number and special character',
-      400
-    );
-  }
-
-  if (role !== 'brand' && role !== 'creator') {
-    throw new AppError('Invalid user role', 400);
-  }
-
-  return { name, email, password, role };
+  return result.data;
 }
 
 export function validateLoginInput(body: unknown): LoginInput {
-  if (!isRecord(body)) {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
     throw new AppError('Invalid login details', 400);
   }
 
-  const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
-  const password = body.password;
+  const result = loginSchema.safeParse(body);
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    throw new AppError('Invalid email address', 400);
+  if (!result.success) {
+    throw new AppError(result.error.issues[0]?.message ?? 'Invalid login details', 400);
   }
 
-  if (typeof password !== 'string' || password.length === 0) {
-    throw new AppError('Password is required', 400);
-  }
-
-  return { email, password };
+  return result.data;
 }
