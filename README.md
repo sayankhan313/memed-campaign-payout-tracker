@@ -9,7 +9,6 @@ Built for the **WLDD SDE-I Take-Home Assignment**, Meme’d demonstrates secure 
 | Resource | Link |
 |---|---|
 | **Live application** | [Launch Meme’d](https://memed-campaign-payout-tracker-vert.vercel.app/) |
-| **Backend API** | [Render deployment](https://memed-campaign-payout-tracker-xemv.onrender.com/) |
 | **Source code** | [GitHub repository](https://github.com/sayankhan313/memed-campaign-payout-tracker) |
 | **Figma UI/UX design** | [Explore Meme’d design](https://www.figma.com/design/CwhntV90jDRCmMShrJjdvE/meme-d?node-id=0-1) |
 
@@ -348,7 +347,6 @@ Other potential enhancements:
 | Component | Provider |
 |---|---|
 | Next.js frontend | [Vercel](https://memed-campaign-payout-tracker-vert.vercel.app/) |
-| Express API | [Render](https://memed-campaign-payout-tracker-xemv.onrender.com/) |
 | Database | MongoDB Atlas |
 | Cache | Render Key Value (Redis-compatible) |
 | Local environment | Docker Compose |
