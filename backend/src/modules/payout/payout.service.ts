@@ -1,37 +1,26 @@
 
 import mongoose, { isValidObjectId, Types } from 'mongoose';
 import { AppError } from '../../errors/app.error.js';
+import { cacheDelete } from '../../lib/redis-cache.js';
 import { CampaignModel } from '../campaign/campaign.model.js';
 import type { CampaignMilestone } from '../campaign/campaign.types.js';
 import { SubmissionModel } from '../submission/submission.model.js';
 import { PayoutModel } from './payout.model.js';
-import type {
-  UpdateViewsResponse,
-  CreatorEarningsResponse,
-} from './payout.types.js';
+import type { UpdateViewsResponse, CreatorEarningsResponse } from './payout.types.js';
 import { validateUpdateViews } from './payout.validation.js';
+import { assessViewSpike, recordViewSpike, type ViewUpdateMode } from './view-spike.service.js';
 
-export function calculateHighestMilestonePayout(
-  milestones: readonly CampaignMilestone[],
-  views: number
-): number {
+export function calculateHighestMilestonePayout(milestones: readonly CampaignMilestone[], views: number): number {
   return milestones.reduce((highest, milestone) => {
     return views >= milestone.views ? Math.max(highest, milestone.payout) : highest;
   }, 0);
 }
 
-export function calculateAdditionalPayout(
-  targetPayout: number,
-  alreadyPaid: number
-): number {
+export function calculateAdditionalPayout(targetPayout: number, alreadyPaid: number): number {
   return Math.max(0, targetPayout - alreadyPaid);
 }
 
-export function hasEnoughBudget(
-  totalBudget: number,
-  budgetSpent: number,
-  additionalPayout: number
-): boolean {
+export function hasEnoughBudget(totalBudget: number, budgetSpent: number, additionalPayout: number): boolean {
   return additionalPayout >= 0 &&
     budgetSpent >= 0 &&
     budgetSpent <= totalBudget &&
@@ -40,7 +29,8 @@ export function hasEnoughBudget(
 
 export async function updateSubmissionViews(
   submissionId: string,
-  body: unknown
+  body: unknown,
+  mode: ViewUpdateMode = 'SIMULATED_PLATFORM',
 ): Promise<UpdateViewsResponse> {
   if (!isValidObjectId(submissionId)) {
     throw new AppError('Invalid submission ID', 400);
@@ -60,6 +50,9 @@ export async function updateSubmissionViews(
       if (views < submission.views) {
         throw new AppError('View count cannot decrease', 409);
       }
+
+      const previousViews = submission.views;
+      const spikeAssessment = assessViewSpike(previousViews, views, mode);
 
       const campaign = await CampaignModel.findById(submission.campaignId).session(session);
 
@@ -86,7 +79,7 @@ export async function updateSubmissionViews(
             budgetSpent: { $lte: campaign.totalBudget - additionalPayout },
           },
           { $inc: { budgetSpent: additionalPayout } },
-          { session }
+          { session },
         );
 
         if (updatedCampaign.modifiedCount !== 1) {
@@ -105,8 +98,15 @@ export async function updateSubmissionViews(
 
       submission.views = views;
       submission.paidAmount = targetPayout;
-
       await submission.save({ session });
+
+      if (spikeAssessment) {
+        await recordViewSpike({
+          submissionId: new Types.ObjectId(String(submission._id)),
+          campaignId: new Types.ObjectId(String(campaign._id)),
+          creatorId: new Types.ObjectId(String(submission.creatorId)),
+        }, spikeAssessment, session);
+      }
 
       return {
         submissionId: String(submission._id),
@@ -122,15 +122,17 @@ export async function updateSubmissionViews(
       throw new AppError('View update could not be completed', 503);
     }
 
+    if (result.additionalPayout > 0) {
+      await cacheDelete('campaigns:live');
+    }
+
     return result;
   } finally {
     await session.endSession();
   }
 }
 
-export async function getCreatorEarnings(
-  creatorId: string
-): Promise<CreatorEarningsResponse> {
+export async function getCreatorEarnings(creatorId: string): Promise<CreatorEarningsResponse> {
   const [summary] = await SubmissionModel.aggregate<{
     totalEarnings: number;
     totalSubmissions: number;

@@ -4,22 +4,19 @@ import type { AuthenticatedUser } from '../auth/auth.types.js';
 import { UserModel } from '../auth/auth.model.js';
 import { SubmissionModel } from '../submission/submission.model.js';
 import { AppError } from '../../errors/app.error.js';
+import { cacheGet, cacheSet, cacheDelete } from '../../lib/redis-cache.js';
 import { CampaignModel } from './campaign.model.js';
-import type {
-  Campaign,
-  CampaignAction,
-  CampaignStatus,
-  PublicCampaignResponse,
-  BrandCampaignResponse,
-  BrandCampaignSubmission,
-} from './campaign.types.js';
-import {
-  validateCreateCampaign,
-  validateUpdateCampaign,
-  validateCampaignAction,
-} from './campaign.validation.js';
+import type { Campaign, CampaignAction, CampaignStatus, PublicCampaignResponse, BrandCampaignResponse, BrandCampaignSubmission } from './campaign.types.js';
+import { validateCreateCampaign, validateUpdateCampaign, validateCampaignAction } from './campaign.validation.js';
 
 type CampaignDocument = HydratedDocument<Campaign>;
+
+const LIVE_CAMPAIGNS_CACHE_KEY = 'campaigns:live';
+const LIVE_CAMPAIGNS_CACHE_TTL = 15;
+
+export async function invalidateLiveCampaignsCache(): Promise<void> {
+  await cacheDelete(LIVE_CAMPAIGNS_CACHE_KEY);
+}
 
 function formatPublicCampaign(campaign: CampaignDocument): PublicCampaignResponse {
   return {
@@ -74,30 +71,33 @@ export async function createCampaign(brandId: string, body: unknown): Promise<Br
     status: 'live',
   });
 
+  await invalidateLiveCampaignsCache();
   return formatBrandCampaign(campaign);
 }
 
 export async function getBrandCampaigns(brandId: string): Promise<BrandCampaignResponse[]> {
   const campaigns = await CampaignModel.find({
     brandId: new Types.ObjectId(brandId),
-  })
-    .sort({ createdAt: -1 })
-    .limit(50)
-    .exec();
+  }).sort({ createdAt: -1 }).limit(50).exec();
 
   return campaigns.map(formatBrandCampaign);
 }
 
 export async function getLiveCampaigns(): Promise<PublicCampaignResponse[]> {
+  const cached = await cacheGet<PublicCampaignResponse[]>(LIVE_CAMPAIGNS_CACHE_KEY);
+
+  if (cached !== null) return cached;
+
   const campaigns = await CampaignModel.find({
     status: 'live',
     $expr: { $lt: ['$budgetSpent', '$totalBudget'] },
-  })
-    .sort({ createdAt: -1 })
-    .limit(50)
-    .exec();
+  }).sort({ createdAt: -1 }).limit(50).exec();
 
-  return campaigns.map(formatPublicCampaign);
+  const result = campaigns.map(formatPublicCampaign);
+
+  await cacheSet(LIVE_CAMPAIGNS_CACHE_KEY, result, LIVE_CAMPAIGNS_CACHE_TTL);
+
+  return result;
 }
 
 export async function getCampaignDetails(
@@ -139,6 +139,8 @@ export async function updateCampaignDetails(
   ).exec();
 
   if (!updated) throw new AppError('Only live or paused campaigns can be edited', 409);
+
+  await invalidateLiveCampaignsCache();
   return formatBrandCampaign(updated);
 }
 
@@ -186,6 +188,7 @@ export async function transitionCampaign(
     throw new AppError('Campaign status changed. Refresh and try again', 409);
   }
 
+  await invalidateLiveCampaignsCache();
   return formatBrandCampaign(updated);
 }
 
