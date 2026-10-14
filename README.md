@@ -73,6 +73,10 @@ The core engineering focus is **correct payout calculation, budget consistency, 
 
 ## 4. System Architecture
 
+![Meme’d System Architecture](docs/testing/screenshots/system%20architecture%20diagram/Meme%E2%80%99d%20Campaign%20Payout%20Tracker%20Architecture.png)
+
+*Figure 1. Meme’d Campaign Payout Tracker — System Architecture.*
+
 The current application uses a **modular monolith**: distinct backend modules for authentication, campaigns, submissions, payouts, and spike monitoring, deployed together as one API. This makes testing and transactions simpler for the assignment scope.
 
 ```mermaid
