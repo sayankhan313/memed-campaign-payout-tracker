@@ -76,7 +76,6 @@ export default function ChooseRolePage() {
         </nav>
       </header>
 
-      {/* Main content */}
       <main className="relative mx-auto max-w-6xl px-5 pb-12 pt-7 sm:px-10 sm:pt-8">
         <div className="mb-6 text-center">
           <p className="mb-3 text-[10px] font-bold tracking-[0.2em] text-[#CDC6DB] sm:text-xs">
@@ -115,7 +114,6 @@ export default function ChooseRolePage() {
                 aria-label={`Continue as ${isBrand ? "Brand" : "Creator"}`}
                 className={`group block min-w-0 rounded-3xl border-2 border-transparent p-2 text-left text-[#191628] shadow-xl transition duration-300 hover:-translate-y-1 hover:border-[#A88BFA] hover:shadow-2xl focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[#C8F36B] ${cardBackground}`}
               >
-                {/* Original image size */}
                 <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#D6C9E3] sm:aspect-[3/2]">
                   <Image
                     src={role.image}
@@ -131,7 +129,6 @@ export default function ChooseRolePage() {
                   </span>
                 </div>
 
-                {/* Original card content size */}
                 <div className="px-4 pb-4 pt-5 sm:px-5">
                   <div className="flex items-center justify-between gap-2">
                     <h2

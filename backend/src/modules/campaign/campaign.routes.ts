@@ -6,6 +6,7 @@ import {
   createCampaignController,
   getBrandCampaignsController,
   getLiveCampaignsController,
+  getBrandSpikeAnalyticsController,
   getCampaignDetailsController,
   updateCampaignController,
   transitionCampaignController,
@@ -17,6 +18,7 @@ const router = Router();
 router.post('/', requireAuth, requireRole('brand'), createCampaignController);
 router.get('/mine', requireAuth, requireRole('brand'), getBrandCampaignsController);
 router.get('/live', requireAuth, requireRole('creator'), getLiveCampaignsController);
+router.get('/brand/spike-analytics', requireAuth, requireRole('brand'), getBrandSpikeAnalyticsController);
 router.get('/:id/submissions', requireAuth, requireRole('brand'), getBrandCampaignSubmissionsController);
 router.get('/:id', requireAuth, getCampaignDetailsController);
 router.patch('/:id', requireAuth, requireRole('brand'), updateCampaignController);

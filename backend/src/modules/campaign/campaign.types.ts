@@ -61,6 +61,15 @@ export interface BrandCampaignCreator {
   youtubeChannelUrl?: string;
 }
 
+export interface BrandViewSpike {
+  previousViews: number;
+  newViews: number;
+  deltaViews: number;
+  source: 'SPIKE_DEMO' | 'SIMULATED_PLATFORM';
+  reason: string;
+  createdAt: Date;
+}
+
 export interface BrandCampaignSubmission {
   id: string;
   campaignId: string;
@@ -70,4 +79,26 @@ export interface BrandCampaignSubmission {
   createdAt: Date;
   updatedAt: Date;
   creator: BrandCampaignCreator;
+  latestSpike?: BrandViewSpike;
+}
+
+export interface BrandSpikeAlert {
+  id: string;
+  campaignId: string;
+  campaignName: string;
+  submissionId: string;
+  creatorName: string;
+  previousViews: number;
+  newViews: number;
+  deltaViews: number;
+  source: BrandViewSpike['source'];
+  reason: string;
+  createdAt: Date;
+}
+
+export interface BrandSpikeAnalyticsResponse {
+  totalAlerts: number;
+  affectedCampaigns: number;
+  affectedSubmissions: number;
+  recentAlerts: BrandSpikeAlert[];
 }

@@ -1,0 +1,44 @@
+
+services:
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: memed-backend:local
+    env_file:
+      - ./backend/.env
+    environment:
+      NODE_ENV: production
+      PORT: "5000"
+      FRONTEND_URL: http://localhost:3001
+      REDIS_URL: redis://redis:6379
+      ENABLE_DEMO_VIEW_SIMULATOR: "true"
+    depends_on:
+      redis:
+        condition: service_healthy
+    expose:
+      - "5000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: memed-frontend:local
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+      BACKEND_URL: http://backend:5000
+      ENABLE_DEMO_VIEW_SIMULATOR: "true"
+    ports:
+      - "127.0.0.1:3001:3000"
+    depends_on:
+      - backend
