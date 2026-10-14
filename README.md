@@ -4,6 +4,14 @@
 
 Built for the **WLDD SDE-I Take-Home Assignment**, Meme’d demonstrates secure Brand/Creator workflows, milestone payout accounting, campaign budget protection, concurrency handling, persistent view-spike auditing, and cloud deployment.
 
+### ⚠️ Important: First-Time Loading
+
+> **Please allow 1–2 minutes for the backend to start.**
+>
+> Meme’d uses Render's free-tier hosting, which may enter sleep mode after inactivity.
+>
+> **If the application times out, please wait a moment, refresh the page, and retry.** Subsequent requests should normally load faster.
+
 ## Live Application & Resources
 
 | Resource | Link |
