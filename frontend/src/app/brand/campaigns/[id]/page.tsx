@@ -4,7 +4,7 @@ import Link from 'next/link';
 import {
   Camera as Instagram, CirclePlay as Youtube, Wallet, ChartNoAxesColumn,
   FileText, LockKeyhole, Users, ExternalLink, Eye, CalendarDays,
-  CircleDollarSign,
+  CircleDollarSign, AlertTriangle, ArrowRight, ShieldAlert,
 } from 'lucide-react';
 import CampaignControls from '@/components/brand/campaign-controls';
 import {
@@ -13,6 +13,15 @@ import {
 } from '@/lib/brand';
 
 export const instant = false;
+
+type BrandViewSpike = {
+  previousViews: number;
+  newViews: number;
+  deltaViews: number;
+  source: 'SPIKE_DEMO' | 'SIMULATED_PLATFORM';
+  reason: string;
+  createdAt: string;
+};
 
 type BrandCampaignSubmission = {
   id: string;
@@ -28,6 +37,7 @@ type BrandCampaignSubmission = {
     instagramUsername?: string;
     youtubeChannelUrl?: string;
   };
+  latestSpike?: BrandViewSpike;
 };
 
 type SubmissionsResult = {
@@ -44,6 +54,7 @@ async function getCampaignSubmissions(campaignId: string): Promise<SubmissionsRe
     const response = await fetch(`${backendUrl}/api/campaigns/${encodeURIComponent(campaignId)}/submissions`, {
       headers: { Authorization: `Bearer ${token}` },
       cache: 'no-store',
+      signal: AbortSignal.timeout(12000),
     });
 
     if (!response.ok) {
@@ -105,21 +116,96 @@ function formatDate(value: string): string {
     : date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+function formatDateTime(value: string): string {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? 'Unknown time'
+    : date.toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function SpikeWarning({ spike }: { spike: BrandViewSpike }) {
+  return (
+    <div className="rounded-2xl border border-[#EED8B2] bg-[#FFF9EF] p-4 sm:p-5 lg:col-span-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex items-start gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FFF0D6] text-[#B77B28]">
+            <AlertTriangle size={19} />
+          </div>
+          <div>
+            <h3 className="text-sm font-black text-[#84551D]">Unusual View Spike Detected</h3>
+            <p className="mt-1 text-xs leading-5 text-[#A27B46]">
+              A sudden increase in simulated views was recorded for this submission.
+            </p>
+          </div>
+        </div>
+        <span className="rounded-full border border-[#E5C694] bg-[#FFF2DC] px-3 py-1.5 text-[10px] font-black uppercase tracking-wide text-[#9C651F]">
+          Flagged for review
+        </span>
+      </div>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <div className="rounded-xl border border-[#F1E2CD] bg-white p-3.5">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-[#A18D73]">Previous Views</p>
+          <p className="mt-2 text-lg font-black tabular-nums text-[#332A2E]">{formatNumber(spike.previousViews)}</p>
+        </div>
+        <div className="rounded-xl border border-[#F1E2CD] bg-white p-3.5">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-[#A18D73]">Updated Views</p>
+          <p className="mt-2 text-lg font-black tabular-nums text-[#332A2E]">{formatNumber(spike.newViews)}</p>
+        </div>
+        <div className="rounded-xl border border-[#E9C894] bg-[#FFF0D6] p-3.5">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-[#A57836]">Sudden Increase</p>
+          <p className="mt-2 text-lg font-black tabular-nums text-[#98601C]">+{formatNumber(spike.deltaViews)}</p>
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#EEDFC8] pt-3">
+        <div className="flex flex-wrap items-center gap-3 text-[11px] text-[#987C57]">
+          <span className="flex items-center gap-1.5">
+            <CalendarDays size={13} />
+            {formatDateTime(spike.createdAt)}
+          </span>
+          <span className="rounded-lg bg-[#FFF0D9] px-2 py-1 font-bold text-[#9A672B]">
+            {spike.source === 'SPIKE_DEMO' ? 'Spike Detection Demo' : 'Simulated Platform Update'}
+          </span>
+        </div>
+        <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[#866E51]">
+          <ShieldAlert size={14} />
+          Audit warning only
+        </span>
+      </div>
+
+      <p className="mt-3 text-[11px] leading-5 text-[#A18A6B]">
+        This flag indicates unusual simulated activity, not confirmed fraud. Milestone payouts continue to follow the existing transaction and campaign budget rules.
+      </p>
+    </div>
+  );
+}
+
 function CreatorSubmissionRow({ submission }: { submission: BrandCampaignSubmission }) {
   const instagramUrl = getSafeSocialUrl(submission.creator.instagramUsername, 'instagram');
   const youtubeUrl = getSafeSocialUrl(submission.creator.youtubeChannelUrl, 'youtube');
   const postUrl = getSafePostUrl(submission.postUrl);
   const creatorName = submission.creator.name || 'Unknown Creator';
+  const spike = submission.latestSpike;
 
   return (
-    <div className="grid gap-5 border-t border-[#F0EDEB] px-6 py-6 transition hover:bg-[#FDFBFF] lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1.3fr)_minmax(100px,0.65fr)_minmax(110px,0.7fr)] lg:items-center">
+    <div className={`grid gap-5 border-t border-[#F0EDEB] px-6 py-6 transition hover:bg-[#FDFBFF] lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1.3fr)_minmax(100px,0.65fr)_minmax(110px,0.7fr)] lg:items-center ${spike ? 'bg-[#FFFEFB]' : ''}`}>
       <div className="flex min-w-0 items-start gap-3">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F0EBFE] text-lg font-black text-[#8057D9]">
           {creatorName.charAt(0).toUpperCase()}
         </div>
 
         <div className="min-w-0">
-          <p className="truncate text-sm font-black text-[#252133]">{creatorName}</p>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="truncate text-sm font-black text-[#252133]">{creatorName}</p>
+            {spike && (
+              <span className="inline-flex items-center gap-1 rounded-full border border-[#EBCB9D] bg-[#FFF1DC] px-2 py-1 text-[10px] font-black text-[#A46B25]">
+                <AlertTriangle size={11} />
+                Unusual Spike
+              </span>
+            )}
+          </div>
+
           <p className="mt-1 text-[11px] text-[#968F9D]">Creator · Profile unverified</p>
 
           <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -201,6 +287,8 @@ function CreatorSubmissionRow({ submission }: { submission: BrandCampaignSubmiss
         </div>
         <p className="mt-1 text-[11px] text-[#A49CAB]">Milestone earnings</p>
       </div>
+
+      {spike && <SpikeWarning spike={spike} />}
     </div>
   );
 }
@@ -227,6 +315,7 @@ export default async function BrandCampaignDetailPage({ params }: { params: Prom
   const PlatformIcon = campaign.platform === 'instagram' ? Instagram : Youtube;
   const exhausted = isBudgetExhausted(campaign);
   const totalSubmissionEarnings = submissions.reduce((sum, submission) => sum + submission.paidAmount, 0);
+  const flaggedSubmissions = submissions.filter(submission => Boolean(submission.latestSpike)).length;
 
   return (
     <main className="mx-auto max-w-[1350px] space-y-7 px-5 py-8 sm:px-8 xl:px-10">
@@ -256,6 +345,13 @@ export default async function BrandCampaignDetailPage({ params }: { params: Prom
             {exhausted && (
               <span className="rounded-full bg-[#FFEFDB] px-4 py-2 text-xs font-black uppercase text-[#915B26]">
                 Budget Exhausted
+              </span>
+            )}
+
+            {!submissionsError && flaggedSubmissions > 0 && (
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#FFF0D8] px-4 py-2 text-xs font-black text-[#965D1B]">
+                <AlertTriangle size={14} />
+                {flaggedSubmissions} Flagged
               </span>
             )}
           </div>
@@ -357,6 +453,25 @@ export default async function BrandCampaignDetailPage({ params }: { params: Prom
               Budget, platform and payout thresholds cannot be changed after launch. Paused and Completed campaigns can still settle existing submissions. Archiving permanently stops future view updates and payouts, so settle obligations first.
             </p>
           </section>
+
+          {flaggedSubmissions > 0 && !submissionsError && (
+            <section className="rounded-[20px] border border-[#F0D5A9] bg-[#FFF8EC] p-5">
+              <div className="flex items-center gap-2 text-sm font-black text-[#9A641F]">
+                <AlertTriangle size={18} />
+                View Spike Monitoring
+              </div>
+              <p className="mt-3 text-2xl font-black text-[#80511A]">{flaggedSubmissions}</p>
+              <p className="mt-1 text-xs leading-6 text-[#99784E]">
+                Flagged {flaggedSubmissions === 1 ? 'submission' : 'submissions'} among the latest {submissions.length} shown below.
+              </p>
+              <p className="mt-2 text-[11px] leading-5 text-[#A58D6C]">
+                Simulated anomaly records are stored for audit and do not automatically block payouts.
+              </p>
+              <Link href="/brand/analytics" className="mt-4 inline-flex items-center gap-1.5 text-xs font-black text-[#99601B] hover:underline">
+                View Brand Analytics <ArrowRight size={13} />
+              </Link>
+            </section>
+          )}
         </aside>
       </div>
 
@@ -367,10 +482,11 @@ export default async function BrandCampaignDetailPage({ params }: { params: Prom
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F0EBFE] text-[#8057D9]">
                 <Users size={20} />
               </div>
+
               <div>
                 <h2 className="text-lg font-black">Creator Submissions</h2>
                 <p className="mt-1 text-xs text-[#928A98]">
-                  Review participating Creators, their social profiles and earned rewards.
+                  Review participating Creators, their social profiles, earned rewards and anomaly flags.
                 </p>
               </div>
             </div>
@@ -384,6 +500,12 @@ export default async function BrandCampaignDetailPage({ params }: { params: Prom
               <span className="rounded-full bg-[#EAF7DF] px-3.5 py-2 text-xs font-black text-[#527B35]">
                 {formatINR(totalSubmissionEarnings)} earned
               </span>
+              {flaggedSubmissions > 0 && (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FFF0D9] px-3.5 py-2 text-xs font-black text-[#9A641F]">
+                  <AlertTriangle size={13} />
+                  {flaggedSubmissions} flagged
+                </span>
+              )}
             </div>
           )}
         </div>
@@ -419,7 +541,7 @@ export default async function BrandCampaignDetailPage({ params }: { params: Prom
 
             <div className="border-t border-[#F0EDEB] bg-[#FCFBFD] px-7 py-4">
               <p className="text-[11px] text-[#968E9D]">
-                Showing the latest {submissions.length} submissions. Social profiles are self-declared and not independently verified.
+                Showing the latest {submissions.length} submissions. Social profiles are self-declared and not independently verified. Spike flags indicate simulated anomalies, not proven fraud.
               </p>
             </div>
           </>

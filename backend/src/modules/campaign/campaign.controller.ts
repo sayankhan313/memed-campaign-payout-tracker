@@ -9,6 +9,7 @@ import {
   updateCampaignDetails,
   transitionCampaign,
   getBrandCampaignSubmissions,
+  getBrandSpikeAnalytics,
 } from './campaign.service.js';
 
 function getAuthenticatedUser(req: Request) {
@@ -43,6 +44,15 @@ export const getLiveCampaignsController: RequestHandler = async (_req, res, next
   try {
     const campaigns = await getLiveCampaigns();
     res.status(200).json({ success: true, data: campaigns });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getBrandSpikeAnalyticsController: RequestHandler = async (req, res, next) => {
+  try {
+    const analytics = await getBrandSpikeAnalytics(getAuthenticatedUser(req).id);
+    res.status(200).json({ success: true, data: analytics });
   } catch (error) {
     next(error);
   }
