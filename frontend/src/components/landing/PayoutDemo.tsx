@@ -39,7 +39,6 @@ export default function PayoutDemo() {
     >
       <div className="mx-auto grid w-[calc(100%-40px)] max-w-[1180px] items-center gap-9 sm:w-[calc(100%-64px)] lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-12 xl:gap-14">
 
-        {/* Left: Section information */}
         <div className="min-w-0">
           <p className="mb-4 text-[10px] font-bold tracking-[0.17em]">
             ✳ THE MATH BEHIND THE MAGIC
@@ -94,7 +93,6 @@ export default function PayoutDemo() {
           </p>
         </div>
 
-        {/* Right: Interactive payout calculator */}
         <div className="min-w-0 rounded-[22px] bg-[#F7F5F0] p-5 shadow-[0_20px_55px_#19162820] sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="text-[10px] font-bold tracking-[0.13em]">
@@ -106,7 +104,6 @@ export default function PayoutDemo() {
             </span>
           </div>
 
-          {/* Views */}
           <div className="mt-5 flex items-end justify-between gap-3">
             <div>
               <label
@@ -129,7 +126,6 @@ export default function PayoutDemo() {
             </span>
           </div>
 
-          {/* Slider */}
           <input
             id="views-slider"
             type="range"
@@ -147,7 +143,6 @@ export default function PayoutDemo() {
             <span>120K views</span>
           </div>
 
-          {/* Milestone cards */}
           <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">
             {milestones.map((milestone) => {
               const isCurrent = current?.views === milestone.views;
@@ -195,7 +190,6 @@ export default function PayoutDemo() {
             })}
           </div>
 
-          {/* Next milestone information */}
           <p
             aria-live="polite"
             className="mt-3 min-h-5 text-[11px] leading-5 text-[#625C6C]"
@@ -205,7 +199,6 @@ export default function PayoutDemo() {
               : "Top milestone reached!"}
           </p>
 
-          {/* Current payout summary */}
           <div className="mt-3 grid grid-cols-2 gap-3 rounded-xl bg-[#191628] p-4 text-[#F7F5F0]">
             <div className="min-w-0">
               <span className="block text-[10px] leading-4 text-[#BFB8CB]">
@@ -228,7 +221,6 @@ export default function PayoutDemo() {
             </div>
           </div>
 
-          {/* Budget progress */}
           <div className="mt-4">
             <div className="mb-2 flex flex-wrap justify-between gap-2 text-[11px]">
               <strong>Campaign budget</strong>
